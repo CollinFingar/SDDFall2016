@@ -1,6 +1,26 @@
+:root{
+    --background-color: #292929;
+    --dim-accent: #444444;
+    --bright-accent: #8cffdd;
+    --font: Verdana, Geneva, sans-serif;
+}
+
 body {
-    /*font-size: 62.5%;
-    text-align: center;*/
-    background-color: #000000;
-    color: #ffffff
+    background-color: var(--background-color);
+}
+
+h1 {
+    text-align: left;
+    color: var(--bright-accent);
+    font-family: var(--font);
+    margin-top: 5px;
+}
+
+.titleDiv{
+    background-color: #111111;
+}
+
+.makerText{
+    color: white;
+    font-family: var(--font);
 }
