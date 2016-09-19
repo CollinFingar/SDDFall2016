@@ -1,0 +1,23 @@
+{
+  "name": "sddfall2016",
+  "version": "1.0.0",
+  "description": "A project to manage a trading card collection",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CollinFingar/SDDFall2016.git"
+  },
+  "author": "Anthony LaRosa, Caleb Harder, Collin Fingar, William Goubeaux",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CollinFingar/SDDFall2016/issues"
+  },
+  "homepage": "https://github.com/CollinFingar/SDDFall2016#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "mongodb": "^2.2.10"
+  }
+}

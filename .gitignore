@@ -1,1 +1,10 @@
 # git ignore
+
+# data folder
+data/
+
+# Node modules folder
+node_modules/
+
+# NPM messages
+npm-debug.log
