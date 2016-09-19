@@ -29,20 +29,20 @@ router.route('/')
     })
     //Parse build and return a request
     .get(function(req, res, next) {
+        res.setHeader('Content-Type', 'application/json');
         var cards = mongoManager.get().collection('pokemon');
+        var responseJSON = { };
         cards.find().each(function(err, doc) {
             //If there is data to write
             if (!err && (doc !== null)) {
-                var card = {
-                    id: doc.id,
+                responseJSON[doc.id] = {
                     name: doc.name,
                     set: doc.set
                 };
-                res.write(JSON.stringify(card));
             }
             //If the cursor has reached the end of its data
             else if (doc === null) {
-                res.end();
+                res.json(responseJSON);
             }
         });
     });
