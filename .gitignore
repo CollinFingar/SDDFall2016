@@ -33,6 +33,7 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
-TCG App/Library/Temp/*
+TCG App/Library/*
+TCG App/Temp/*
 TCG App/obj/*
 TCG App/builds/*
