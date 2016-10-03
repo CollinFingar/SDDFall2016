@@ -1,65 +1,37 @@
-var sideCanvas;
-var canvas1;
-var canvas2;
-var ctxS;
-var ctx1;
-var ctx2;
+var app = angular.module('theApp', []);
+app.controller('theCtrl', function($scope) {
+    $scope.firstName= "John";
+    $scope.lastName= "Doe";
+    $scope.tabTitles = ["Encyclopedia", "Collection", "Social", "Classifieds", "Pull-Rate"];
+});
 
 function main(){
-    setUpCanvas();
+    document.getElementById("enc").className += " active";
+    document.getElementById("Encyclopedia").style.display = "block";
+    $(document).ready( function() {
+        $("#Encyclopedia").load("html/encyclopedia.html");
+    });
 }
 
-function setUpCanvas(){
-    canvas1 = document.getElementById("canvas1");
-    ctx1 = canvas1.getContext("2d");
-    canvas2 = document.getElementById("canvas2");
-    ctx2 = canvas2.getContext("2d");
-    sideCanvas = document.getElementById("sideCanvas");
-    ctxS = sideCanvas.getContext("2d");
-    draw();
-}
+function openTab(evt, section) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
 
-function draw(){
-    ctx1.fillStyle = "#000000";
-    ctx1.fillRect(0,0,canvas1.width,canvas1.height);
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
 
-    ctx2.fillStyle = "#000000";
-    ctx2.fillRect(0,0,canvas2.width,canvas2.height);
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
 
-    ctxS.fillStyle = "#777777";
-    ctxS.fillRect(0,0,sideCanvas.width,sideCanvas.height);
-
-    var cardwidth = sideCanvas.width/5;
-    var cardheight = sideCanvas.height * .8;
-
-    //ctx1.fillStyle = "#001433";
-    ctx1.fillRect(0,0,sideCanvas.width,sideCanvas.height);
-    ctx1.fillRect(0,0,sideCanvas.width,sideCanvas.height);
-    //ctx1.fillStyle = "#003380";
-    ctx1.fillRect(0,0,sideCanvas.width,sideCanvas.height);
-    ctx1.fillRect(0,0,sideCanvas.width,sideCanvas.height);
-    // ctx1.fillStyle = "#0066ff";
-    // ctx1.fillRect(  sideCanvas.width/2 - cardwidth/2,
-    //                 (sideCanvas.height - cardheight)/2,
-    //                 cardwidth,
-    //                 cardheight);
-    drawCard(ctx1, "#001433", sideCanvas.width/2 + 2.6 * cardwidth/2, (sideCanvas.height - cardheight)/1.2, cardwidth * .8, cardheight * .8);
-    drawCard(ctx1, "#001433", sideCanvas.width/2 - 1.64 * cardwidth/.8, (sideCanvas.height - cardheight)/1.2, cardwidth * .8, cardheight * .8);
-
-    drawCard(ctx1, "#003380", sideCanvas.width/2 + cardwidth/2, (sideCanvas.height - cardheight)/1.2, cardwidth * .8, cardheight * .8);
-    drawCard(ctx1, "#003380", sideCanvas.width/2 - cardwidth/.8, (sideCanvas.height - cardheight)/1.2, cardwidth * .8, cardheight * .8);
-
-    drawCard(ctx1, "#0066ff", sideCanvas.width/2 - cardwidth/2, (sideCanvas.height - cardheight)/2, cardwidth, cardheight);
-
-}
-
-function drawCard(ctx, color, x, y, cw, ch){
-    ctx.fillStyle = color;
-    ctx.fillRect(  x,
-                    y,
-                    cw,
-                    ch);
+    // Show the current tab, and add an "active" class to the link that opened the tab
+    document.getElementById(section).style.display = "block";
+    evt.currentTarget.className += " active";
 }
 
 main();
-setInterval(draw, 25);

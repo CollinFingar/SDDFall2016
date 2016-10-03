@@ -3,24 +3,70 @@
 
 <!DOCTYPE html>
 <html>
+    <script src= "https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <link rel="shortcut icon" href="images/favicon.png" type="image/png">
+    <link rel="stylesheet" href="stylesheets/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="stylesheets/stylesheet.css" type="text/css">
+    <script src="utils/jquery-3.1.0.js" type="text/javascript"></script>
     <head>
         <meta charset="UTF-8">
         <title>metaBinder</title>
-    <link rel="shortcut icon" href="images/favicon.png" type="image/png">
-    <link rel="stylesheet" href="stylesheets/stylesheet.css" type="text/css">
+
     </head>
     <body>
-        <div>
-            <text class="makerText">TCG</class>
+        <div style="height: 15vh">
+            <text class="makerText">TCG</text>
             <h1><font style="color: #DDDDDD">meta</font>Binder</h1>
         </div>
-        <br/><br/>
-        <canvas id="sideCanvas" width="500" height="500" class="sideCanvas"/></canvas>
-        <canvas id="canvas1" width="500" height="500" class="canvas1"></canvas>
-        <canvas id="canvas2" width="500" height="500" class="canvas2"></canvas>
+        <div ng-app="theApp" ng-controller="theCtrl" style="height: 85vh">
+            <div>
+                <ul class="tab" style="list-style-type: none;">
+                    <li><a href="#" class="tablinks" onclick="openTab(event, 'Encyclopedia')" id="enc">Encyclopedia</a></li>
+                    <li><a href="#" class="tablinks" onclick="openTab(event, 'Collection')" id="col">Collection</a></li>
+                    <li><a href="#" class="tablinks" onclick="openTab(event, 'Social')" id="soc">Social</a></li>
+                    <li><a href="#" class="tablinks" onclick="openTab(event, 'Classifieds')" id="cla">Classifieds</a></li>
+                    <li><a href="#" class="tablinks" onclick="openTab(event, 'Pull-Rate')" id="pr">Pull-Rate</a></li>
+                </ul>
+            </div>
+            <br/>
+            <div style="margin:40px;">
+                <div id="Encyclopedia" class="tabcontent">
+                </div>
 
+                <div id="Collection" class="tabcontent">
+                </div>
+
+                <div id="Social" class="tabcontent">
+                </div>
+
+                <div id="Classifieds" class="tabcontent">
+                </div>
+
+                <div id="Pull-Rate" class="tabcontent">
+                </div>
+        </div>
+
+    </div>
     </body>
-    <script src="utils/jquery-3.1.0.js" type="text/javascript"></script>
-    <script src="utils/angular.js" type="text/javascript"></script>
+
     <script src="scripts/main.js" type="text/javascript"></script>
+    <script>
+        $(document).ready( function() {
+            $("#enc").on("click", function() {
+                $("#Encyclopedia").load("html/encyclopedia.html");
+            });
+            $("#col").on("click", function() {
+                $("#Collection").load("html/collection.html");
+            });
+            $("#soc").on("click", function() {
+                $("#Social").load("html/social.html");
+            });
+            $("#cla").on("click", function() {
+                $("#Classifieds").load("html/classifieds.html");
+            });
+            $("#pr").on("click", function() {
+                $("#Pull-Rate").load("html/pull-rate.html");
+            });
+        });
+    </script>
 </html>

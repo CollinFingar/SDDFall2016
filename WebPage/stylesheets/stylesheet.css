@@ -1,7 +1,7 @@
 :root{
     --background-color: #292929;
     --dim-accent: #BBBBBB;
-    --bright-accent: #b30000;
+    --bright-accent: #FF3333;
     --font: Verdana, Geneva, sans-serif;
 }
 
@@ -13,19 +13,23 @@ h1 {
     text-align: left;
     color: var(--bright-accent);
     font-family: var(--font);
-    margin-top: 5px;
-    font-size: 32px;
+    margin-top: 0px;
+    font-size: 48px;
+    margin-left: 40px;
 }
 
 .titleDiv{
-    background-color: #111111;
+    margin: 20px;
 }
 
 .makerText{
     color: white;
     font-family: var(--font);
+    margin: 40px;
+    padding-top: 20px;
+    font-size: 24px;
 }
-
+/*
 .canvas1{
     width: 56%;
     height: 500px;
@@ -43,4 +47,45 @@ h1 {
     width: 20%;
     height: 500px;
     border: 3px solid var(--dim-accent);
+}
+*/
+\
+/* Style the list */
+ul.tab {
+
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Float the list items side by side */
+ul.tab li {float: left;}
+
+/* Style the links inside the list items */
+ul.tab li a {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 17px;
+    background-color: black;
+}
+
+/* Change background color of links on hover */
+ul.tab li a:hover {background-color: #aa0000;}
+
+/* Create an active/current tablink class */
+ul.tab li a:focus, .active {background-color: #FF3333;}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border: none;
+    color: white;
 }
