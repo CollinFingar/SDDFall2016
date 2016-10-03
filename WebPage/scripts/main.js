@@ -1,4 +1,7 @@
+// This is the main application.
 var app = angular.module('theApp', []);
+
+// This is an initial controller.
 app.controller('theCtrl', function($scope) {
     $scope.firstName= "John";
     $scope.lastName= "Doe";
@@ -6,6 +9,7 @@ app.controller('theCtrl', function($scope) {
 });
 
 function main(){
+    // This opens the encyclopedia as the default page.
     document.getElementById("enc").className += " active";
     document.getElementById("Encyclopedia").style.display = "block";
     $(document).ready( function() {
@@ -13,6 +17,7 @@ function main(){
     });
 }
 
+// Opens the page for a tab when it's clicked on.
 function openTab(evt, section) {
     // Declare all variables
     var i, tabcontent, tablinks;

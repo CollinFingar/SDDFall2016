@@ -5,10 +5,16 @@
     --font: Verdana, Geneva, sans-serif;
 }
 
-body {
-    background-color: var(--background-color);
+html {
+    height: 100%;
 }
 
+body {
+    background-color: var(--background-color);
+    height: 100%;
+}
+
+/* For app title */
 h1 {
     text-align: left;
     color: var(--bright-accent);
@@ -22,33 +28,37 @@ h1 {
     margin: 20px;
 }
 
+/* For the 'TCG' */
 .makerText{
     color: white;
     font-family: var(--font);
-    margin: 40px;
+    margin-left: 40px;
     padding-top: 20px;
     font-size: 24px;
 }
-/*
-.canvas1{
-    width: 56%;
-    height: 500px;
-    border: 3px solid var(--dim-accent);
+
+/* For main app area */
+.mainAppDiv{
+    margin-left:40px;
+    margin-top:0px;
+    margin-right:40px;
+    clear: both;
+    height: 82.5%;
+    background-color: black;
 }
 
-.canvas2{
-    width: 20%;
-    height: 500px;
-    border: 3px solid var(--dim-accent);
-}
 
-.sideCanvas{
-    margin-left: 1%;
-    width: 20%;
-    height: 500px;
-    border: 3px solid var(--dim-accent);
-}
-*/
+
+
+
+
+
+/*ALL OF THIS
+  IS FOR THE
+  TAB LIST.
+  EDIT AT OWN
+  RISK. */
+
 \
 /* Style the list */
 ul.tab {
