@@ -16,7 +16,7 @@ body {
 
 /* For app title */
 h1 {
-    text-align: left;
+
     color: var(--bright-accent);
     font-family: var(--font);
     margin-top: 0px;
@@ -47,9 +47,19 @@ h1 {
     background-color: black;
 }
 
+.loginText {
+    color: white;
+    font-size: 16px;
+    margin: 8px;
+    margin-bottom: 4px;
+}
 
-
-
+.loginButton{
+    background-color: #FF3333;
+    color: white;
+    border: 0px solid black;
+    margin: 5px;
+}
 
 
 
