@@ -27,25 +27,35 @@ router.use(function(req, res, next) {
     next();
 });
 
+queryBasic = function(query, res) {
+    var cards = mongoManager.get().collection('pokemon');
+    var responseJSON = { };
+    cards.find( query ).sort( { "name":1 } ).each(function(err, doc) {
+        //If there is data to write
+        if (!err && (doc !== null)) {
+            responseJSON[doc.id] = {
+                name: doc.name,
+                set: doc.set
+            };
+        }
+        //If the cursor has reached the end of its data
+        else if (doc === null) {
+            res.setHeader('Content-Type', 'application/json');
+            res.json(responseJSON);
+        }
+    });
+};
+
 //Return a set of all of the cards
 router.route('/all')
     .get(function(req, res, next) {
-        res.setHeader('Content-Type', 'application/json');
-        var cards = mongoManager.get().collection('pokemon');
-        var responseJSON = { };
-        cards.find().sort( { "name":1 } ).each(function(err, doc) {
-            //If there is data to write
-            if (!err && (doc !== null)) {
-                responseJSON[doc.id] = {
-                    name: doc.name,
-                    set: doc.set
-                };
-            }
-            //If the cursor has reached the end of its data
-            else if (doc === null) {
-                res.json(responseJSON);
-            }
-        });
+        queryBasic({}, res);
+    });
+
+//Do custom queries based on the query parameters
+router.route('/search')
+    .get(function  (req, res, next) {
+        queryBasic(req.query, res);
     });
 
 //Return a single card
@@ -63,6 +73,24 @@ router.route('/card/:id')
             else {
                 res.setHeader('Content-Type', 'application/json');
                 res.json(item);
+            }
+        });
+    });
+
+//Return info about a set of cards
+router.route('/set/:id')
+    .get(function(req, res, next) {
+        var cards = mongoManager.get().collection('pokemon');
+        var responseJSON = { };
+        cards.find( { "setCode":req.params.id } ).sort( { "number":1 } ).each(function(err, doc) {
+            //If there is data to write
+            if (!err && (doc !== null)) {
+                responseJSON[doc.id] = doc;
+            }
+            //If the cursor has reached the end of its data
+            else if (doc === null) {
+                res.setHeader('Content-Type', 'application/json');
+                res.json(responseJSON);
             }
         });
     });
