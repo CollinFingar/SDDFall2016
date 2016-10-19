@@ -1,0 +1,111 @@
+:root{
+    --background-color: #292929;
+    --dim-accent: #BBBBBB;
+    --bright-accent: #FF3333;
+    --font: Verdana, Geneva, sans-serif;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    background-color: var(--background-color);
+    height: 100%;
+}
+
+/* For app title */
+h1 {
+
+    color: var(--bright-accent);
+    font-family: var(--font);
+    margin-top: 0px;
+    font-size: 48px;
+    margin-left: 40px;
+}
+
+.titleDiv{
+    margin: 20px;
+}
+
+/* For the 'TCG' */
+.makerText{
+    color: white;
+    font-family: var(--font);
+    margin-left: 40px;
+    padding-top: 20px;
+    font-size: 24px;
+}
+
+/* For main app area */
+.mainAppDiv{
+    margin-left:40px;
+    margin-top:0px;
+    margin-right:40px;
+    clear: both;
+    height: 82.5%;
+    background-color: black;
+}
+
+.loginText {
+    color: white;
+    font-size: 16px;
+    margin: 8px;
+    margin-bottom: 4px;
+}
+
+.loginButton{
+    background-color: #FF3333;
+    color: white;
+    border: 0px solid black;
+    margin: 5px;
+}
+
+
+
+/*ALL OF THIS
+  IS FOR THE
+  TAB LIST.
+  EDIT AT OWN
+  RISK. */
+
+\
+/* Style the list */
+ul.tab {
+
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Float the list items side by side */
+ul.tab li {float: left;}
+
+/* Style the links inside the list items */
+ul.tab li a {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 17px;
+    background-color: #aa0000;
+}
+
+/* Change background color of links on hover */
+ul.tab li a:hover {background-color: #FF3333;}
+
+/* Create an active/current tablink class FF3333*/
+ul.tab li a:focus, .active {background-color: black;}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border: none;
+    color: white;
+}

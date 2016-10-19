@@ -1,0 +1,48 @@
+<!--TCG
+    Collin, Caleb, Will, Anthony-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <!--Included scripts for Angular, jQuery, the CSS, etc.-->
+    <script src= "https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <link rel="shortcut icon" href="images/favicon.png" type="image/png">
+    <link rel="stylesheet" href="stylesheets/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="stylesheets/stylesheet.css" type="text/css">
+    <script src="utils/jquery-3.1.0.js" type="text/javascript"></script>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>metaBinder</title>
+    </head>
+
+    <body>
+        <!--Top div for the title-->
+        <div style="height: 15%;">
+            <text class="makerText">TCG</text>
+            <h1><font style="color: #DDDDDD">meta</font>Binder</h1>
+        </div>
+        <!--Middle div for the list and main page-->
+        <div ng-app="theApp" ng-controller="theCtrl" style="height: 80%; margin-top: 2%">
+            <div>
+                <!--Tab List for the main pages-->
+                <ul class="tab" style="list-style-type: none;">
+                    <li><a href="#" class="tablinks" onclick="openTab(event, 'Encyclopedia')" id="enc">Encyclopedia</a></li>
+                    <li><a href="#" class="tablinks" onclick="openTab(event, 'Collection')" id="col">Collection</a></li>
+                    <li><a href="#" class="tablinks" onclick="openTab(event, 'Social')" id="soc">Social</a></li>
+                    <li><a href="#" class="tablinks" onclick="openTab(event, 'Classifieds')" id="cla">Classifieds</a></li>
+                    <li><a href="#" class="tablinks" onclick="openTab(event, 'Pull-Rate')" id="pr">Pull-Rate</a></li>
+                </ul>
+            </div>
+            <!--Load pages from the html folder-->
+            <div class="mainAppDiv">
+                <div id="Encyclopedia" class="tabcontent" ng-include="'html/encyclopedia.html'"></div>
+                <div id="Collection" class="tabcontent" ng-include="'html/collection.html'"></div>
+                <div id="Social" class="tabcontent" ng-include="'html/social.html'"></div>
+                <div id="Classifieds" class="tabcontent" ng-include="'html/classifieds.html'"></div>
+                <div id="Pull-Rate" class="tabcontent" ng-include="'html/pull-rate.html'"></div>
+            </div>
+        </div>
+    </body>
+    <script src="scripts/main.js" type="text/javascript"></script>
+</html>
