@@ -3,9 +3,8 @@ var app = angular.module('theApp', []);
 
 // This is an initial controller.
 app.controller('theCtrl', function($scope) {
-    $scope.firstName= "John";
-    $scope.lastName= "Doe";
     $scope.tabTitles = ["Encyclopedia", "Collection", "Social", "Classifieds", "Pull-Rate"];
+    $scope.encyclopediaEntries = ["Pikachu", "Squirtle", "YourMom", "Charmander", "YourMom1", "YourMom2", "YourMom3", "YourMom4", "YourMom5", "YourMom6", "YourMom7"];
 });
 
 function main(){
@@ -40,3 +39,15 @@ function openTab(evt, section) {
 }
 
 main();
+
+/**
+// Retrieve
+var MongoClient = require('mongodb').MongoClient;
+
+// Connect to the db
+MongoClient.connect("mongodb://localhost:27017/exampleDb", function(err, db) {
+  if(!err) {
+    console.log("We are connected");
+  }
+});
+**/
