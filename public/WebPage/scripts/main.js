@@ -2,10 +2,20 @@
 var app = angular.module('theApp', []);
 
 // This is an initial controller.
-app.controller('theCtrl', function($scope) {
+app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.tabTitles = ["Encyclopedia", "Collection", "Social", "Classifieds", "Pull-Rate"];
-    $scope.encyclopediaEntries = ["Pikachu", "Squirtle", "YourMom", "Charmander", "YourMom1", "YourMom2", "YourMom3", "YourMom4", "YourMom5", "YourMom6", "YourMom7"];
-});
+    $scope.encyclopediaEntries = ["Pikachu", "Squirtle", "YourMom", "Charmander"];
+    $http({
+        method : "GET",
+        url : "http://localhost:3000/api/all"
+    }).then(function mySucces(response) {
+
+        $scope.encyclopediaEntries = response.data;
+        console.log($scope.encyclopediaEntries);
+    }, function myError(response) {
+        console.log('FAILURE');
+    });
+}]);
 
 function main(){
     // This opens the encyclopedia as the default page.
@@ -39,15 +49,3 @@ function openTab(evt, section) {
 }
 
 main();
-
-/**
-// Retrieve
-var MongoClient = require('mongodb').MongoClient;
-
-// Connect to the db
-MongoClient.connect("mongodb://localhost:27017/exampleDb", function(err, db) {
-  if(!err) {
-    console.log("We are connected");
-  }
-});
-**/
