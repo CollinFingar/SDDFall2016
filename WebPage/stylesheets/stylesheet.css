@@ -92,14 +92,14 @@ ul.tab li a {
     text-decoration: none;
     transition: 0.3s;
     font-size: 17px;
-    background-color: black;
+    background-color: #aa0000;
 }
 
 /* Change background color of links on hover */
-ul.tab li a:hover {background-color: #aa0000;}
+ul.tab li a:hover {background-color: #FF3333;}
 
-/* Create an active/current tablink class */
-ul.tab li a:focus, .active {background-color: #FF3333;}
+/* Create an active/current tablink class FF3333*/
+ul.tab li a:focus, .active {background-color: black;}
 
 /* Style the tab content */
 .tabcontent {
