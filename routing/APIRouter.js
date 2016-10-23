@@ -1,10 +1,10 @@
 //Attempt to connect to the mongo database
-var mongoManager = require('./mongoManager');
+var mongoManager = require('../mongo/mongoManager');
 var assert = require('assert');
 
 mongoManager.connect('mongodb://localhost:27017/card', function(err) {
     if (err) {
-        console.log('Unable to connect to Mongo.');
+        console.log('Error: Unable to connect to Mongo.');
         process.exit(1);
     }
     else {
@@ -27,6 +27,7 @@ router.use(function(req, res, next) {
     next();
 });
 
+//A query that is shared between various get calls
 queryBasic = function(query, res) {
     var cards = mongoManager.get().collection('pokemon');
     var responseJSON = { };
