@@ -6,7 +6,7 @@ var app = express();
 //
 
 //Route /api requests to the APIRouter
-var APIRouter = require('./APIRouter.js');
+var APIRouter = require('./routing/APIRouter.js');
 app.use('/api', APIRouter);
 
 //Route the rest of the requests to the static directory
