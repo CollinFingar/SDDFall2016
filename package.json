@@ -18,6 +18,7 @@
   "homepage": "https://github.com/CollinFingar/SDDFall2016#readme",
   "dependencies": {
     "express": "^4.14.0",
+    "jsonwebtoken": "^7.1.9",
     "mongodb": "^2.2.10"
   }
 }

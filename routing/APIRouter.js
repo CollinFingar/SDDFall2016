@@ -18,20 +18,125 @@ var router = express.Router();
 
 //Middleware to log any requests
 router.use(function(req, res, next) {
-    console.log("Request received");
-    console.log("Request URL:" + req.url); //The url given without query params or /api
-    console.log("Request path:" + req.path); //The url with query params but no /api
-    console.log("Request Method:" + req.method); //The verb used in the request e.g. GET, PUT, POST, DELETE
-    console.log("Request Query:" + JSON.stringify(req.query) + "\n"); //The JSON of the parsed query params
-    console.log("Request Body:" + req.body + "\n");
+    console.log('Request received');
+    console.log('Request URL:' + req.url); //The url given without query params or /api
+    console.log('Request path:' + req.path); //The url with query params but no /api
+    console.log('Request Method:' + req.method); //The verb used in the request e.g. GET, PUT, POST, DELETE
+    console.log('Request Query:' + JSON.stringify(req.query) + '\n'); //The JSON of the parsed query params
+    console.log('Request Body:' + req.body + '\n');
     next();
 });
+
+
+/****
+*
+* Routing that relates to user authentication
+*
+****/
+
+//Get the token library
+var jwt = require('jsonwebtoken');
+
+//Get the credential checker library
+var credentialVerifyer = require('../lib/credentialVerifyer');
+
+router.route('/register')
+    .post(function(req, res, next) {
+        //Get the users collection from Mongo
+        var users = mongoManager.get().collection('users');
+
+        //Check if the requested username already exists
+        users.findOne( { 'username':req.body.username, 'password':req.body.password }, function(err, result) {
+            if (err) {
+                res.status(500);
+                res.send('Internal server error. The request could not be handled.');
+            }
+
+            if (result) {
+                res.status(409);
+                res.send('The username already exists');
+            }
+
+            else {
+                //Check if the password is sane
+                if (credentialVerifyer.verify(req.body)) {
+                    //Create the user and redirect to the sign in page
+                    users.insertOne( { 'username':req.body.username,
+                                        'password':req.body.password,
+                                        'cards':{},
+                                        'friends':[],
+                                        'bio':'I want to be the very best!' } , function(err, r) {
+                        if (err) {
+                            res.status(500);
+                            res.send('Internal server error. The account could not be created');
+                        }
+
+                        res.status(201);
+                        res.send('The user account has been created.');
+                    });
+                }
+                //The credentials are wrong
+                else {
+                    res.status(422);
+                    res.send('The login information was improperly formed.');
+                }
+            }
+        });
+    });
+
+router.route('/signin')
+    .post(function(req, res, next) {
+        //Check if the req has a valid username and password
+        if (req.body.username && req.body.password) {
+            //Get the mongo users collection
+            var users = mongoManager.get().collection('users');
+            //Search for the username and password
+            users.findOne( { 'username':req.body.username, 'password':req.body.password }, function(err, result) {
+                if (err) {
+                    res.status(500);
+                    res.send('Error validating credentials.');
+                }
+
+                //TODO: Return a javascript web token
+
+
+                res.setHeader('Content-Type', 'application/json');
+                res.json({
+
+                });
+            });
+        }
+        else {
+            res.status(400);
+            res.send('Error: The credentials were not well formed.');
+        }
+    });
+
+//Middleware to ensure that the user is signed in
+router.route('/user', function(req, res, next) {
+    //Check if the token is a valid token
+
+});
+
+router.route('/user/collection')
+    .get(function(req, res, next) {
+
+    })
+    .post(function(req, res, next) {
+
+    });
+
+/****
+*
+* Routing that requires no authentication
+*
+****/
 
 //A query that is shared between various get calls
 queryBasic = function(query, res) {
     var cards = mongoManager.get().collection('pokemon');
     var responseJSON = { };
-    cards.find( query ).sort( { "name":1 } ).each(function(err, doc) {
+    cards.find( query ).sort( { 'name':1 } ).each(function(err, doc) {
         //If there is data to write
         if (!err && (doc !== null)) {
             responseJSON[doc.id] = {
@@ -63,7 +168,7 @@ router.route('/search')
 router.route('/card/:id')
     .get(function(req, res, next) {
         var cards = mongoManager.get().collection('pokemon');
-        var cursor = cards.find( { "id":req.params.id } );
+        var cursor = cards.find( { 'id':req.params.id } );
         cursor.nextObject(function(err, item) {
             if (err) {
                 res.status(504).send('Internal Server Error');
@@ -83,7 +188,7 @@ router.route('/set/:id')
     .get(function(req, res, next) {
         var cards = mongoManager.get().collection('pokemon');
         var responseJSON = { };
-        cards.find( { "setCode":req.params.id } ).sort( { "number":1 } ).each(function(err, doc) {
+        cards.find( { 'setCode':req.params.id } ).sort( { 'number':1 } ).each(function(err, doc) {
             //If there is data to write
             if (!err && (doc !== null)) {
                 responseJSON[doc.id] = doc;
