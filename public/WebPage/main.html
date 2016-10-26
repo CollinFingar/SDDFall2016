@@ -2,7 +2,7 @@
     Collin, Caleb, Will, Anthony-->
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="theApp">
     <!--Included scripts for Angular, jQuery, the CSS, etc.-->
     <script src= "https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
     <link rel="shortcut icon" href="images/favicon.png" type="image/png">
@@ -16,14 +16,35 @@
         <title>metaBinder</title>
     </head>
 
-    <body>
+    <body ng-controller="theCtrl">
         <!--Top div for the title-->
         <div style="height: 15%;">
             <text class="makerText">TCG</text>
+
+
+            <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;" class="topRight">Login</button>
+            <div id="id01" class="modal">
+              <form class="modal-content animate">
+                <div class="container">
+                  <label><b>Email</b></label>
+                  <input type="text" placeholder="Enter Username" name="uname" required>
+                  <label><b>Password</b></label>
+                  <input type="password" placeholder="Enter Password" name="psw" required>
+                  <button type="submit">Login</button>
+                  <input type="checkbox" checked="checked"> Remember me
+                </div>
+                <div class="container" style="background-color:#f1f1f1">
+                  <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+                  <span class="psw">Forgot <a href="#">password?</a></span>
+                </div>
+              </form>
+            </div>
+
+
             <h1><font style="color: #DDDDDD">meta</font>Binder</h1>
         </div>
         <!--Middle div for the list and main page-->
-        <div ng-app="theApp" ng-controller="theCtrl" style="height: 80%; margin-top: 2%">
+        <div  style="height: 80%; margin-top: 2%">
             <div>
                 <!--Tab List for the main pages-->
                 <ul class="tab" style="list-style-type: none;">
@@ -36,11 +57,11 @@
             </div>
             <!--Load pages from the html folder-->
             <div class="mainAppDiv">
-                <div id="Encyclopedia" class="tabcontent" ng-include="'html/encyclopedia.html'"></div>
-                <div id="Collection" class="tabcontent" ng-include="'html/collection.html'"></div>
-                <div id="Social" class="tabcontent" ng-include="'html/social.html'"></div>
-                <div id="Classifieds" class="tabcontent" ng-include="'html/classifieds.html'"></div>
-                <div id="Pull-Rate" class="tabcontent" ng-include="'html/pull-rate.html'"></div>
+                <div id="Encyclopedia" class="tabcontent" ng-include="'html/tabs/encyclopedia.html'"></div>
+                <div id="Collection" class="tabcontent" ng-include="'html/tabs/collection.html'"></div>
+                <div id="Social" class="tabcontent" ng-include="'html/tabs/social.html'"></div>
+                <div id="Classifieds" class="tabcontent" ng-include="'html/tabs/classifieds.html'"></div>
+                <div id="Pull-Rate" class="tabcontent" ng-include="'html/tabs/pull-rate.html'"></div>
             </div>
         </div>
     </body>

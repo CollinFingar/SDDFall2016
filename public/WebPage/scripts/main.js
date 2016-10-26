@@ -22,7 +22,7 @@ function main(){
     document.getElementById("enc").className += " active";
     document.getElementById("Encyclopedia").style.display = "block";
     $(document).ready( function() {
-        $("#Encyclopedia").load("html/encyclopedia.html");
+        $("#Encyclopedia").load("html/tabs/encyclopedia.html");
     });
 }
 
