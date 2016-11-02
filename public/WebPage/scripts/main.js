@@ -7,7 +7,7 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.encyclopediaEntries = [];
 	$scope.encycPage = [];
 	$scope.pageNum = 0;
-	
+
     $http({
         method : "GET",
         url : "http://localhost:3000/api/all"
@@ -64,21 +64,51 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.email = "generic@gener.ic";
     $scope.password = "password";
+    // Asks server to sign in using current email and password
     $scope.signin = function(){
+        console.log("Attempting Sign In");
+        $scope.email = document.getElementById('loginUName').value;
+        $scope.password = document.getElementById('loginPassword').value;
         $http({
             method : "POST",
-            url : "http://localhost:3000/signin",
-            username : $scope.email,
-            password : $scope.password
+            url : "http://localhost:3000/api/signin",
+            data : JSON.stringify(
+                {
+                    username: $scope.email,
+                    password: $scope.password
+                }
+            )
         }).then(function mySuccess(response) {
             console.log(response);
         }, function myError(response) {
-            console.log('FAILURE');
+            console.log(response);
         });
         document.getElementById('id01').style.display='none';
     };
+
     $scope.test = function(){
         alert("Test Success");
+    };
+    // Asks server to register using current email and password
+    $scope.register = function(){
+        console.log("Attempting Registration");
+        $scope.email = document.getElementById('loginUName').value;
+        $scope.password = document.getElementById('loginPassword').value;
+        $http({
+            method : "POST",
+            url : "http://localhost:3000/api/register",
+            data : JSON.stringify(
+                {
+                    username: $scope.email,
+                    password: $scope.password
+                }
+            )
+        }).then(function mySuccess(response) {
+            console.log(response);
+        }, function myError(response) {
+            console.log(response);
+        });
+        document.getElementById('id01').style.display='none';
     };
 }]);
 
