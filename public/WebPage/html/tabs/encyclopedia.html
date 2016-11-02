@@ -3,7 +3,13 @@
 <p>I'm in the encyclopedia tab!</p>
 -->
 <div style="columns: 4;">
-  <div ng-repeat="x in encycPage1">
-      <img src= {{x.imageUrl}} style="width:122px;height:178px;">
-  </div>
+	<div ng-repeat="x in encycPage">
+		<img ng-src= {{x.imageUrl}} style="width:122px;height:178px;">
+	</div>
 </div>
+<button ng-click="nextPage()">
+	Next Page
+</button>
+<button ng-click="previousPage()">
+	Previous Page
+</button>

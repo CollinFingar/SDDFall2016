@@ -4,24 +4,61 @@ var app = angular.module('theApp', []);
 // This is an initial controller.
 app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.tabTitles = ["Encyclopedia", "Collection", "Social", "Classifieds", "Pull-Rate"];
-    $scope.encyclopediaEntries = ["Pikachu", "Squirtle", "YourMom", "Charmander"];
-	$scope.encycPage1 = [];
+    $scope.encyclopediaEntries = [];
+	$scope.encycPage = [];
+	$scope.pageNum = 0;
+	
     $http({
         method : "GET",
         url : "http://localhost:3000/api/all"
     }).then(function mySucces(response) {
-
-        $scope.encyclopediaEntries = response.data;
+		$scope.encyclopediaEntries = response.data;
 		var i = 0;
 		for (x in $scope.encyclopediaEntries) {
-			if (i == 16) {break;}
-			i++;
-			$scope.encycPage1.push($scope.encyclopediaEntries[x]);
+			if (i < 16*($scope.pageNum)) {
+				i++;
+			}
+			else if (i == 16*($scope.pageNum+1)) {
+				break;
+			}
+			else {
+				i++;
+				$scope.encycPage.push($scope.encyclopediaEntries[x]);
+			}
 		}
+		$scope.$apply;
         //console.log($scope.encycPage1);
     }, function myError(response) {
         console.log('FAILURE');
     });
+	$scope.nextPage = function() {
+		$scope.pageNum++;
+		$scope.loadPage();
+	}
+	$scope.previousPage = function() {
+		if ($scope.pageNum != 0) {
+			$scope.pageNum--;
+			$scope.loadPage();
+		}
+	}
+	$scope.loadPage = function() {
+		localStorage.clear();
+		var i = 0;
+		$scope.encycPage = []; //clear previous page data
+		for (x in $scope.encyclopediaEntries) {
+			if (i < 16*($scope.pageNum)) {
+				i++;
+			}
+			else if (i == 16*($scope.pageNum+1)) {
+				break;
+			}
+			else {
+				i++;
+				$scope.encycPage.push($scope.encyclopediaEntries[x]);
+			}
+		}
+		$scope.$apply;
+	}
 }]);
 
 app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
@@ -49,9 +86,6 @@ function main(){
     // This opens the encyclopedia as the default page.
     document.getElementById("enc").className += " active";
     document.getElementById("Encyclopedia").style.display = "block";
-    $(document).ready( function() {
-        $("#Encyclopedia").load("html/tabs/encyclopedia.html");
-    });
 }
 
 // Opens the page for a tab when it's clicked on.
