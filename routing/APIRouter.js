@@ -139,10 +139,7 @@ queryBasic = function(query, res) {
     cards.find( query ).sort( { 'name':1 } ).each(function(err, doc) {
         //If there is data to write
         if (!err && (doc !== null)) {
-            responseJSON[doc.id] = {
-                name: doc.name,
-                set: doc.set
-            };
+            responseJSON[doc.id] = doc;
         }
         //If the cursor has reached the end of its data
         else if (doc === null) {

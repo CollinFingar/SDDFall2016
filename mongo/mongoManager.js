@@ -1,16 +1,16 @@
 var MongoClient = require('mongodb').MongoClient;
 
 var connection = {
-    db: null,
+    db: null
 };
 
 exports.connect = function(url, callback) {
-    if (connection.db) return callback();
+    if (connection.db) return;
 
     MongoClient.connect(url, function(err, db) {
         if (err) return callback(err);
         connection.db = db;
-        callback();
+        return callback();
     });
 };
 

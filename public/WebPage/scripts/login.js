@@ -5,7 +5,7 @@ var app = angular.module('theApp', []);
 app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.loadMainPage = function(){
         $window.location.href = '/main.html';
-    }
+    };
 }]);
 
 
