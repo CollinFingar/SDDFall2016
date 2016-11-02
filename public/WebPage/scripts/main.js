@@ -5,13 +5,20 @@ var app = angular.module('theApp', []);
 app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.tabTitles = ["Encyclopedia", "Collection", "Social", "Classifieds", "Pull-Rate"];
     $scope.encyclopediaEntries = ["Pikachu", "Squirtle", "YourMom", "Charmander"];
+	$scope.encycPage1 = [];
     $http({
         method : "GET",
         url : "http://localhost:3000/api/all"
     }).then(function mySucces(response) {
 
         $scope.encyclopediaEntries = response.data;
-        console.log($scope.encyclopediaEntries);
+		var i = 0;
+		for (x in $scope.encyclopediaEntries) {
+			if (i == 16) {break;}
+			i++;
+			$scope.encycPage1.push($scope.encyclopediaEntries[x]);
+		}
+        //console.log($scope.encycPage1);
     }, function myError(response) {
         console.log('FAILURE');
     });
