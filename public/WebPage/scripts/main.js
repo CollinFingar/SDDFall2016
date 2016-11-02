@@ -49,9 +49,6 @@ function main(){
     // This opens the encyclopedia as the default page.
     document.getElementById("enc").className += " active";
     document.getElementById("Encyclopedia").style.display = "block";
-    $(document).ready( function() {
-        $("#Encyclopedia").load("html/tabs/encyclopedia.html");
-    });
 }
 
 // Opens the page for a tab when it's clicked on.
