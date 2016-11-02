@@ -2,14 +2,16 @@
 <h3>Encyclopedia</h3>
 <p>I'm in the encyclopedia tab!</p>
 -->
-<div style="columns: 4;">
+<div style="columns: 4;text-align:center;">
 	<div ng-repeat="x in encycPage">
 		<img ng-src= {{x.imageUrl}} style="width:122px;height:178px;">
 	</div>
 </div>
-<button ng-click="nextPage()">
-	Next Page
-</button>
-<button ng-click="previousPage()">
-	Previous Page
-</button>
+<div style="text-align:center;">
+	<button ng-click="nextPage()"style="text-align: center;">
+		Next Page
+	</button>
+	<button ng-click="previousPage()">
+		Previous Page
+	</button>
+</div>

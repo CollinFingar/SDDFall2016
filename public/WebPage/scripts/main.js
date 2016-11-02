@@ -13,21 +13,7 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
         url : "http://localhost:3000/api/all"
     }).then(function mySucces(response) {
 		$scope.encyclopediaEntries = response.data;
-		var i = 0;
-		for (x in $scope.encyclopediaEntries) {
-			if (i < 16*($scope.pageNum)) {
-				i++;
-			}
-			else if (i == 16*($scope.pageNum+1)) {
-				break;
-			}
-			else {
-				i++;
-				$scope.encycPage.push($scope.encyclopediaEntries[x]);
-			}
-		}
-		$scope.$apply;
-        //console.log($scope.encycPage1);
+		$scope.loadPage();
     }, function myError(response) {
         console.log('FAILURE');
     });
