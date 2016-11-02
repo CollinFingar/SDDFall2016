@@ -17,6 +17,27 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
     });
 }]);
 
+app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
+    $scope.email = "generic@gener.ic";
+    $scope.password = "password";
+    $scope.signin = function(){
+        $http({
+            method : "POST",
+            url : "http://localhost:3000/signin",
+            username : $scope.email,
+            password : $scope.password
+        }).then(function mySuccess(response) {
+            console.log(response);
+        }, function myError(response) {
+            console.log('FAILURE');
+        });
+        document.getElementById('id01').style.display='none';
+    };
+    $scope.test = function(){
+        alert("Test Success");
+    };
+}]);
+
 function main(){
     // This opens the encyclopedia as the default page.
     document.getElementById("enc").className += " active";

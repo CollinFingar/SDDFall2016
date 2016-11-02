@@ -16,9 +16,9 @@
         <title>metaBinder</title>
     </head>
 
-    <body ng-controller="theCtrl">
+    <body>
         <!--Top div for the title-->
-        <div style="height: 15%;">
+        <div style="height: 15%;" ng-controller="loginCtrl">
             <text class="makerText">TCG</text>
 
 
@@ -30,7 +30,7 @@
                   <input type="text" placeholder="Enter Username" name="uname" required>
                   <label><b>Password</b></label>
                   <input type="password" placeholder="Enter Password" name="psw" required>
-                  <button type="submit">Login</button>
+                  <button type="submit" ng-click="signin()">Login</button>
                   <input type="checkbox" checked="checked"> Remember me
                 </div>
                 <div class="container" style="background-color:#f1f1f1">
@@ -44,7 +44,7 @@
             <h1><font style="color: #DDDDDD">meta</font>Binder</h1>
         </div>
         <!--Middle div for the list and main page-->
-        <div  style="height: 80%; margin-top: 2%">
+        <div  style="height: 80%; margin-top: 2%" ng-controller="theCtrl">
             <div>
                 <!--Tab List for the main pages-->
                 <ul class="tab" style="list-style-type: none;">
