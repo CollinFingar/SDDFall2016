@@ -60,7 +60,7 @@ router.route('/register')
             else {
                 //Check if the password is sane
                 if (credentialVerifyer.verify(req.body)) {
-                    //Create the user and redirect to the sign in page
+                    //Create the user and respond with a success
                     users.insertOne( { 'username':req.body.username,
                                         'password':req.body.password,
                                         'cards':{},
@@ -96,8 +96,6 @@ router.route('/signin')
                     res.status(500);
                     res.send('Error validating credentials.');
                 }
-
-                //TODO: Return a javascript web token
 
 
                 res.setHeader('Content-Type', 'application/json');

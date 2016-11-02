@@ -2,6 +2,14 @@ var express = require('express');
 var app = express();
 
 //
+// Add body parsing to the app
+//
+
+var bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+//
 //Set up some routing
 //
 
