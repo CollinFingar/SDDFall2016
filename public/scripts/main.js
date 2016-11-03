@@ -5,8 +5,8 @@ var app = angular.module('theApp', []);
 app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.tabTitles = ["Encyclopedia", "Collection", "Social", "Classifieds", "Pull-Rate"];
     $scope.encyclopediaEntries = [];
-	$scope.encycPage = [];
-	$scope.pageNum = 0;
+    $scope.encycPage = [];
+    $scope.pageNum = 0;
 
     $http({
         method : "GET",
@@ -20,13 +20,13 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 	$scope.nextPage = function() {
 		$scope.pageNum++;
 		$scope.loadPage();
-	}
+	};
 	$scope.previousPage = function() {
 		if ($scope.pageNum != 0) {
 			$scope.pageNum--;
 			$scope.loadPage();
 		}
-	}
+	};
 	$scope.loadPage = function() {
 		localStorage.clear();
 		var i = 0;
@@ -44,7 +44,7 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 			}
 		}
 		$scope.$apply;
-	}
+	};
 }]);
 
 app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
