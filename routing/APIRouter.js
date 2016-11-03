@@ -106,7 +106,7 @@ router.route('/signin')
 
                 //Create a token to give to the client
                 var token = jwt.sign(user, authenticationKey, {
-                    expiresInMinutes: 600 // expires in 10 hours
+                    expiresIn: 600 // expires in 10 hours
                 });
 
                 res.setHeader('Content-Type', 'application/json');
