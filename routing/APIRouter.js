@@ -116,7 +116,7 @@ router.route('/signin')
             });
         }
         else {
-            res.status(400);
+            res.status(409);
             res.send('Error: The credentials were not well formed.');
         }
     });
