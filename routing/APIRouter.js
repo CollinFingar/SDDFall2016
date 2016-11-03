@@ -40,6 +40,8 @@ var jwt = require('jsonwebtoken');
 //Get the credential checker library
 var credentialVerifyer = require('../lib/credentialVerifyer');
 
+var authenticationKey = "a very nice key";
+
 router.route('/register')
     .post(function(req, res, next) {
         //Get the users collection from Mongo
@@ -88,19 +90,28 @@ router.route('/signin')
     .post(function(req, res, next) {
         //Check if the req has a valid username and password
         if (req.body.username && req.body.password) {
+            //Put the data into a var
+            var user = {
+                'username':req.body.username,
+                'password':req.body.passowrd
+            };
             //Get the mongo users collection
             var users = mongoManager.get().collection('users');
             //Search for the username and password
-            users.findOne( { 'username':req.body.username, 'password':req.body.password }, function(err, result) {
+            users.findOne( user, function(err, result) {
                 if (err) {
                     res.status(500);
                     res.send('Error validating credentials.');
                 }
 
+                //Create a token to give to the client
+                var token = jwt.sign(user, authenticationKay, {
+                    expiresInMinutes: 600 // expires in 10 hours
+                });
 
                 res.setHeader('Content-Type', 'application/json');
                 res.json({
-
+                    'token':token
                 });
             });
         }
@@ -113,7 +124,26 @@ router.route('/signin')
 //Middleware to ensure that the user is signed in
 router.route('/user', function(req, res, next) {
     //Check if the token is a valid token
+    if (res.body.token) {
+        var checkToken = res.body.token;
 
+        jwt.verify(token, authenticationKey, function(err, decoded) {
+            if (err) {
+                res.status(500);
+                res.send('Invalid access.');
+            }
+
+            //Congratulations on being in the VIP club
+
+            //Store the decoded credentials for use later in the route
+            req.decoded = decoded;
+            next();
+        });
+    }
+    else {
+        res.status(500);
+        res.send('No token found.');
+    }
 });
 
 router.route('/user/collection')
