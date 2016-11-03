@@ -1,13 +1,21 @@
 // This is the main application.
 var app = angular.module('theApp', []);
 
-// This is an initial controller.
+// This controller handles most of the card databasing
 app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
-    $scope.tabTitles = ["Encyclopedia", "Collection", "Social", "Classifieds", "Pull-Rate"];
+    // Names of each of the html tabs
+    $scope.tabTitles = [
+        "Encyclopedia",
+        "Collection",
+        "Social",
+        "Classifieds",
+        "Pull-Rate"];
+    // Will contain all of the card objects
     $scope.encyclopediaEntries = [];
     $scope.encycPage = [];
     $scope.pageNum = 0;
 
+    // This gathers the entire encyclopedia of information upon initialization
     $http({
         method : "GET",
         url : "http://localhost:3000/api/all"
@@ -17,16 +25,19 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
     }, function myError(response) {
         console.log('FAILURE');
     });
+    // This gathers the next grouping of cards to display
 	$scope.nextPage = function() {
 		$scope.pageNum++;
 		$scope.loadPage();
 	};
+    // This gathers the previous grouping of cards to display
 	$scope.previousPage = function() {
 		if ($scope.pageNum != 0) {
 			$scope.pageNum--;
 			$scope.loadPage();
 		}
 	};
+    // This loads the image of each card in the current grouping
 	$scope.loadPage = function() {
 		localStorage.clear();
 		var i = 0;
@@ -47,55 +58,63 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 	};
 }]);
 
+// This controller handles all of the account handling (signing in/registering)
 app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.email = "generic@gener.ic";
     $scope.password = "password";
-    // Asks server to sign in using current email and password
+    // Asks server to sign in using current email and password field values
     $scope.signin = function(){
-        console.log("Attempting Sign In");
-        $scope.email = document.getElementById('loginUName').value;
-        $scope.password = document.getElementById('loginPassword').value;
         $http({
             method : "POST",
             url : "http://localhost:3000/api/signin",
             data : JSON.stringify(
                 {
-                    username: $scope.email,
-                    password: $scope.password
+                    username: document.getElementById('loginUName').value,
+                    password: document.getElementById('loginPassword').value
                 }
             )
         }).then(function mySuccess(response) {
-            console.log(response);
+            // Upon success, this function happens
+            $scope.email = document.getElementById('loginUName').value;
+            $scope.password = document.getElementById('loginPassword').value;
+            // Close the login/register pop up
+            document.getElementById('id01').style.display='none';
         }, function myError(response) {
-            console.log(response);
+            // Upon failure, this function happens
+            alert(response.data);
         });
-        document.getElementById('id01').style.display='none';
+        //When done
+
     };
 
     $scope.test = function(){
         alert("Test Success");
     };
+
     // Asks server to register using current email and password
     $scope.register = function(){
-        console.log("Attempting Registration");
-        $scope.email = document.getElementById('loginUName').value;
-        $scope.password = document.getElementById('loginPassword').value;
         $http({
             method : "POST",
             url : "http://localhost:3000/api/register",
             data : JSON.stringify(
                 {
-                    username: $scope.email,
-                    password: $scope.password
+                    username: document.getElementById('loginUName').value,
+                    password: document.getElementById('loginPassword').value
                 }
             )
         }).then(function mySuccess(response) {
-            console.log(response);
+            // Upon success, this function happens
+            $scope.email = document.getElementById('loginUName').value;
+            $scope.password = document.getElementById('loginPassword').value;
+            // Close the login/register pop up
+            document.getElementById('id01').style.display='none';
         }, function myError(response) {
-            console.log(response);
+            // Upon failure, this function happens
+            alert(response.data);
+            console.log(response.data);
         });
-        document.getElementById('id01').style.display='none';
     };
+
 }]);
 
 function main(){
