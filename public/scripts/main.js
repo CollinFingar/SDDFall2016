@@ -59,8 +59,8 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 	};
 	// This returns all relevant card data for the card that was clicked
 	$scope.cardData = function(card) {
-		console.log(card.name);
 		$scope.currentCard = card; //attach currentCard to correct card data
+		openTab(event,'Card');
 	}
 }]);
 
@@ -68,7 +68,6 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.email = "generic@gener.ic";
     $scope.password = "password";
-    $scope.token = "token";
     // Asks server to sign in using current email and password field values
     $scope.signin = function(){
         $http({
@@ -86,7 +85,6 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
             $scope.password = document.getElementById('loginPassword').value;
             // Close the login/register pop up
             document.getElementById('id01').style.display='none';
-            $scope.token = response.data.token;
         }, function myError(response) {
             // Upon failure, this function happens
             alert(response.data);
@@ -149,8 +147,7 @@ function openTab(evt, section) {
     }
 
     // Show the current tab, and add an "active" class to the link that opened the tab
-    document.getElementById(section).style.display = "block";
-    evt.currentTarget.className += " active";
+	document.getElementById(section).style.display = "block";
+	evt.currentTarget.className += " active";
 }
-
 main();
