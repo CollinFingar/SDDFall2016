@@ -68,6 +68,7 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.email = "generic@gener.ic";
     $scope.password = "password";
+    $scope.token = "token";
     // Asks server to sign in using current email and password field values
     $scope.signin = function(){
         $http({
@@ -85,6 +86,7 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
             $scope.password = document.getElementById('loginPassword').value;
             // Close the login/register pop up
             document.getElementById('id01').style.display='none';
+            $scope.token = response.data.token;
         }, function myError(response) {
             // Upon failure, this function happens
             alert(response.data);

@@ -37,6 +37,12 @@ h1 {
     font-size: 24px;
 }
 
+.socialHeaders{
+    color: white;
+    font-family: var(--font);
+    font-size: 24px;
+}
+
 /* For main app area */
 .mainAppDiv{
     margin-left:40px;
