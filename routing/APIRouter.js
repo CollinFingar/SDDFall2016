@@ -154,6 +154,15 @@ router.route('/user/collection')
 
     });
 
+router.route('/bio')
+    .post(function(req, res, next) {
+        var Users = mongoManager.get().collection('users');
+        Users.update({'username':req.decoded.username}, {'bio':req.body.newBio}, function(err, result) {
+            if(err) {
+                res.status(500).send('Internal Server Error');
+            }
+        });
+    });
 /****
 *
 * Routing that requires no authentication
