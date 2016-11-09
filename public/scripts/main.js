@@ -15,6 +15,7 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.encyclopediaEntries = [];
     $scope.encycPage = [];
     $scope.pageNum = 0;
+	$scope.currentCard;
 
     // This gathers the entire encyclopedia of information upon initialization
     $http({
@@ -57,6 +58,11 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 		}
 		$scope.$apply;
 	};
+	// This returns all relevant card data for the card that was clicked
+	$scope.cardData = function(card) {
+		$scope.currentCard = card; //attach currentCard to correct card data
+		openTab(event,'Card');
+	}
 }]);
 
 // This controller handles all of the account handling (signing in/registering)
@@ -142,8 +148,7 @@ function openTab(evt, section) {
     }
 
     // Show the current tab, and add an "active" class to the link that opened the tab
-    document.getElementById(section).style.display = "block";
-    evt.currentTarget.className += " active";
+	document.getElementById(section).style.display = "block";
+	evt.currentTarget.className += " active";
 }
-
 main();
