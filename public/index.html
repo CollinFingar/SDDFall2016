@@ -23,7 +23,11 @@
 
             <!--Login pop up code
                 this takes in inputed emails and passwords and passes them to the loginCtrl-->
-            <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;" class="topRight">Login</button>
+            <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;" class="topRight" >Login</button>
+
+            <span class="loginTextTopRight" onmouseover="if(this.innerHTML!='Not logged in'){ emailTextVar = this.innerHTML; this.innerHTML = 'Log out of account'}"
+            onmouseout="this.innerHTML = emailTextVar" ng-click="logOut()">{{emailText}}</span>
+
             <div id="id01" class="modal">
               <form class="modal-content animate">
                 <div class="container">
@@ -32,11 +36,11 @@
                   <label><b>Password</b></label>
                   <input type="password" placeholder="Enter Password" name="psw" id="loginPassword" required>
                   <button type="submit" ng-click="signin()">Login</button><button type="submit" ng-click="register()">Register</button>
-                  <input type="checkbox" checked="checked"> Remember me
+                  <!--<input type="checkbox" checked="checked"> Remember me-->
                 </div>
                 <div class="container" style="background-color:#f1f1f1">
                   <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-                  <span class="psw">Forgot <a href="#">password?</a></span>
+                  <!--<span class="psw">Forgot <a href="#">password?</a></span>-->
                 </div>
               </form>
             </div>
@@ -46,7 +50,7 @@
 
 
         <!--Middle div for the list and main page-->
-        <div  style="height: 170%; min-height: 1200px; margin-top: 2%" ng-controller="theCtrl">
+        <div  style="height: 170%; min-height: 1100px; margin-top: 2%; background-color:black;" ng-controller="theCtrl">
             <div>
                 <!--Tab List for the main pages-->
                 <ul class="tab" style="list-style-type: none;">
