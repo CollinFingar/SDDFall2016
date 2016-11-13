@@ -68,6 +68,9 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.email = "generic@gener.ic";
     $scope.password = "password";
+
+    $scope.token = "noToken";
+    $scope.emailText = "Not logged in.";
     // Asks server to sign in using current email and password field values
     $scope.signin = function(){
         $http({
@@ -83,11 +86,14 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
             // Upon success, this function happens
             $scope.email = document.getElementById('loginUName').value;
             $scope.password = document.getElementById('loginPassword').value;
+            $scope.emailText = document.getElementById('loginUName').value;
+            $scope.token = response.data.token;
             // Close the login/register pop up
             document.getElementById('id01').style.display='none';
         }, function myError(response) {
             // Upon failure, this function happens
-            alert(response.data);
+            $scope.emailText = "Not logged in.";
+            $scope.token = "noToken";
         });
         //When done
 
@@ -112,12 +118,14 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
             // Upon success, this function happens
             $scope.email = document.getElementById('loginUName').value;
             $scope.password = document.getElementById('loginPassword').value;
+            $scope.emailText = document.getElementById('loginUName').value;
+            $scope.token = response.data.token;
             // Close the login/register pop up
             document.getElementById('id01').style.display='none';
         }, function myError(response) {
             // Upon failure, this function happens
-            alert(response.data);
-            console.log(response.data);
+            $scope.emailText = "Not logged in.";
+            $scope.token = "noToken";
         });
     };
 
