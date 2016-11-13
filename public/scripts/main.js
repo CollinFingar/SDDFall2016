@@ -9,7 +9,8 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
         "Collection",
         "Social",
         "Classifieds",
-        "Pull-Rate"];
+        "Pull-Rate",
+        "Card Reader"];
     // Will contain all of the card objects
     $scope.encyclopediaEntries = [];
     $scope.encycPage = [];
