@@ -23,9 +23,10 @@
 
             <!--Login pop up code
                 this takes in inputed emails and passwords and passes them to the loginCtrl-->
-            <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;" class="topRight">Login</button>
+            <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;" class="topRight" >Login</button>
 
-            <span class="topRight" style="top:60px; color: white;">{{emailText}}</span> 
+            <span class="loginTextTopRight" onmouseover="if(this.innerHTML!='Not logged in.'){ emailTextVar = this.innerHTML; this.innerHTML = 'Log out of account.'}"
+            onmouseout="this.innerHTML = emailTextVar" ng-click="logOut()">{{emailText}}</span>
 
             <div id="id01" class="modal">
               <form class="modal-content animate">
@@ -49,7 +50,7 @@
 
 
         <!--Middle div for the list and main page-->
-        <div  style="height: 170%; min-height: 1200px; margin-top: 2%" ng-controller="theCtrl">
+        <div  style="height: 170%; min-height: 1100px; margin-top: 2%; background-color:black;" ng-controller="theCtrl">
             <div>
                 <!--Tab List for the main pages-->
                 <ul class="tab" style="list-style-type: none;">
