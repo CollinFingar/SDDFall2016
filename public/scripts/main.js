@@ -1,6 +1,6 @@
 // This is the main application.
 var app = angular.module('theApp', []);
-var emailTextVar = "Not logged in."
+var emailTextVar = "Not logged in"
 
 // This controller handles most of the card databasing
 app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
@@ -68,11 +68,11 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 
 // This controller handles all of the account handling (signing in/registering)
 app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
-    $scope.email = "generic@gener.ic";
-    $scope.password = "password";
+    $scope.email = "";
+    $scope.password = "";
 
     $scope.token = "noToken";
-    $scope.emailText = "Not logged in.";
+    $scope.emailText = "Not logged in";
     // Asks server to sign in using current email and password field values
     $scope.signin = function(){
         $http({
@@ -136,8 +136,8 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
         $scope.email = "";
         $scope.password = "";
         $scope.token = "noToken";
-        $scope.emailText = "Not logged in.";
-        emailTextVar = "Not logged in.";
+        $scope.emailText = "Not logged in";
+        emailTextVar = "Not logged in";
     }
 
 }]);

@@ -25,7 +25,7 @@
                 this takes in inputed emails and passwords and passes them to the loginCtrl-->
             <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;" class="topRight" >Login</button>
 
-            <span class="loginTextTopRight" onmouseover="if(this.innerHTML!='Not logged in.'){ emailTextVar = this.innerHTML; this.innerHTML = 'Log out of account.'}"
+            <span class="loginTextTopRight" onmouseover="if(this.innerHTML!='Not logged in'){ emailTextVar = this.innerHTML; this.innerHTML = 'Log out of account'}"
             onmouseout="this.innerHTML = emailTextVar" ng-click="logOut()">{{emailText}}</span>
 
             <div id="id01" class="modal">
