@@ -11,7 +11,10 @@ function cardReaderOnLoad() {
 
     function snapshot() {
       if (localMediaStream) {
-        console.log("dangerously cheesy");
+        
+        console.log(result);
+
+
         ctx.drawImage(video, 0, 0);
         // "image/webp" works in Chrome.
         // Other browsers will fall back to image/png.

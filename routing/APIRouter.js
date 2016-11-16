@@ -1,6 +1,7 @@
 //Attempt to connect to the mongo database
 var mongoManager = require('../mongo/mongoManager');
 var assert = require('assert');
+var Fuse = require('fuse.js');
 
 mongoManager.connect('mongodb://localhost:27017/card', function(err) {
     if (err) {
@@ -231,6 +232,33 @@ router.route('/set/:id')
             else if (doc === null) {
                 res.setHeader('Content-Type', 'application/json');
                 res.json(responseJSON);
+            }
+        });
+    });
+
+router.route('/keysearch/:id')
+    .get(function(req, res, next) {
+
+        var options = {shouldSort: true,threshold: 0.2,location: 0,distance: 100,maxPatternLength: 32,tokenize:true,keys:["name","ability.name","ability.text","attacks","attacks.name","attacks.text"]};
+        var cards = mongoManager.get().collection('pokemon');
+        searchKeys = (req.params.id).replace("+", " ");
+        searchCards = [];
+
+
+        var results = [];
+        var f = new Fuse([], options);
+
+        cards.find().each( function(err, doc) {
+            if (err) {
+                res.status(500).send("herpaderp server error");
+            }
+            else if (doc !== null) {
+                searchCards.push(doc);
+            }
+            else if (doc === null) {
+                f = new Fuse(searchCards, options);
+                results = f.search(searchKeys);
+                res.send(results);
             }
         });
     });
