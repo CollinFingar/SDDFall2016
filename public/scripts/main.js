@@ -8,8 +8,6 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.tabTitles = [
         "Encyclopedia",
         "Collection",
-        "Social",
-        "Classifieds",
         "Pull-Rate",
         "Card Reader"];
     // Will contain all of the card objects
@@ -17,6 +15,8 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.encycPage = [];
     $scope.pageNum = 0;
 	$scope.currentCard;
+
+    $scope.addSearchResults = [];
 
     // This gathers the entire encyclopedia of information upon initialization
     $http({
@@ -64,6 +64,18 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 		$scope.currentCard = card; //attach currentCard to correct card data
 		openTab(event,'Card');
 	}
+
+    $scope.searchKeyword = function(key){
+        var value = document.getElementById("cardNameSearchText").value;
+        $http({
+            method : "GET",
+            url : "http://localhost:3000/api/keyword/" + value
+        }).then(function mySucces(response) {
+    		$scope.addSearchResults = response.data;
+        }, function myError(response) {
+            console.log('FAILURE');
+        });
+    }
 }]);
 
 // This controller handles all of the account handling (signing in/registering)

@@ -148,10 +148,6 @@ ul.tab li a:focus, .active {background-color: black;}
     width:auto;
 }
 
-.loginTextTopRight:hover {
-    content: "Log Out";
-}
-
 
 
 
