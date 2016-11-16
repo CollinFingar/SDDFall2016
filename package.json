@@ -4,14 +4,11 @@
   "description": "A project to manage a trading card collection",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/mocha --reporter spec"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CollinFingar/SDDFall2016.git"
-  },
-  "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec"
   },
   "author": "Anthony LaRosa, Caleb Harder, Collin Fingar, William Goubeaux",
   "license": "MIT",
@@ -22,6 +19,7 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "fuse.js": "^2.5.0",
     "jsonwebtoken": "^7.1.9",
     "mongodb": "^2.2.10"
   },

@@ -1,9 +1,61 @@
-<div style="left: 20%; top: 20%; ">
-	<img ng-src= "{{currentCard.imageUrl}}" style="width:244px; height:364px;">
+<div style="top: 20%";>
+	<div class="row">
+		<div align="center" class="col-md-8 col-sm-6">
+			<img ng-src= "{{currentCard.imageUrl}}" style="width:244px; height:364px;">
+		</div>
+		<div align="center" class="col-md-3 col-sm-6">
+			<table border="2">
+				<tr ng-show="checkField(currentCard.name)">
+					<td>Name</td> <td>{{currentCard.name}}
+				</tr>
+				<tr ng-show="checkField(currentCard.types)">
+					<td>Type(s)</td> <td>{{currentCard.types[0]}} {{currentCard.types[1]}}</td>
+				</tr>
+				<tr ng-show="checkField(currentCard.hp)">
+					<td>HP</td> <td> {{currentCard.hp}}</td>
+				</tr>
+				<tr ng-show="checkField(currentCard.attacks)">
+					<td>Attack(s)</td> 
+					<td>
+						<div ng-show="checkField(currentCard.attacks[0].name"> <b>{{currentCard.attacks[0].name}}</b></div> 
+						<div ng-show="checkField(currentCard.attacks[0].cost">{{currentCard.attacks[0].cost}}</div>
+						<div ng-show="checkFIeld(currentCard.attacks[0].damage">{{currentCard.attacks[0].damage}}</div>
+						<div ng-show="checkField(currentCard.attacks[0].text">{{currentCard.attacks[0].text}}</div>
+
+						<div ng-show="checkField(currentCard.attacks[1].name"><b>{{currentCard.attacks[1].name}}</b></div> 
+						<div ng-show="checkField(currentCard.attacks[1].cost">{{currentCard.attacks[1].cost}}</div>
+						<div ng-show="checkFIeld(currentCard.attacks[1].damage">{{currentCard.attacks[1].damage}}</div>
+						<div ng-show="checkField(currentCard.attacks[1].text">{{currentCard.attacks[1].text}}</div>
+					</td>
+				</tr>
+				<tr ng-show="checkField(currentCard.weaknesses)">
+					<td>Weaknesses</td>
+					<td>
+						<div ng-show="checkField(currentCard.weaknesses[0].type"> <b>{{currentCard.weaknesses[0].type}}</b></div>
+						<div ng-show="checkField(currentCard.weaknesses[0].value"> {{currentCard.weaknesses[0].value}}</div>
+						
+						<div ng-show="checkField(currentCard.weaknesses[1].type"> <b>{{currentCard.weaknesses[1].type}}</b></div>
+						<div ng-show="checkField(currentCard.weaknesses[1].value"> {{currentCard.weaknesses[1].value}}</div>
+					</td>
+				</tr>
+				<tr ng-show="checkField(currentCard.resistances)">
+					<td>Resistances</td>
+					<td>
+						<div ng-show="checkField(currentCard.resistances[0].type"> <b>{{currentCard.resistances[0].type}}</b></div>
+						<div ng-show="checkField(currentCard.resistances[0].value"> {{currentCard.resistances[0].value}}</div>
+						
+						<div ng-show="checkField(currentCard.resistances[1].type"> <b>{{currentCard.resistances[1].type}}</b></div>
+						<div ng-show="checkField(currentCard.resistances[1].value"> {{currentCard.resistances[1].value}}</div>
+					</td>
+				</tr>
+			</table>
+			
+		</div>
+	</div>
 </div>
-<div style="text-allign: left; left: 30%">
-	Name: {{currentCard.name}}
-</div>
+
+<div align="center" class="col-xs-12">
 	<button onClick="openTab(event,'Encyclopedia')"style="text-align: center;">
 		Return to Encyclopedia
 	</button>
+</div>

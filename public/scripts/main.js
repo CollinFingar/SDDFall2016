@@ -63,6 +63,14 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 	$scope.cardData = function(card) {
 		$scope.currentCard = card; //attach currentCard to correct card data
 		openTab(event,'Card');
+	};
+	// This checks if a field is empty or not in the JSON to run html code accordingly
+	$scope.checkField = function(name,type) {
+		if (name == null) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
     $scope.searchKeyword = function(key){
