@@ -18,12 +18,18 @@ exports.get = function() {
     return connection.db;
 };
 
-exports.close = function(callback) {
+exports.close = function() {
     if (connection.db) {
         connection.db.close(function(err, result) {
             connection.db = null;
             connection.mode = null;
-            callback(err);
+
+            if (err) {
+                return false;
+            }
+            else {
+                return true;
+            }
         });
     }
 };

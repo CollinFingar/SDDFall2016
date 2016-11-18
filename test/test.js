@@ -1,7 +1,11 @@
 var assert = require('assert');
 
-var verifyer = require('../lib/credentialVerifyer.js');
+//**************
+//* Unit tests *
+//**************
+
 describe('credentialVerifyer', function() {
+    var verifyer = require('../lib/credentialVerifyer.js');
     describe.only('#verify', function() {
         it('should return true when the username is a real email and the password is also correct', function() {
             var correctCredentials = {
@@ -34,11 +38,23 @@ describe('credentialVerifyer', function() {
     });
 });
 
-//Example test
-// describe('Array', function() {
-//     describe('#indexOf()', function() {
-//         it('should return -1 when the value is not present', function() {
-//             assert.equal(-1, [1,2,3].indexOf(4));
-//         });
-//     });
-// });
+describe('MongoManager', function() {
+    var manager = require('../credentialVerifyer.js');
+    describe('#connect()', function(done) {
+        it('should get a Mongo connection', function() {
+            manager.connect('mongodb://localhost:27017/card', function(err) {
+                assert.equal(err, null);
+                done();
+            });
+        });
+        it('should properly cache the db connection', function(done) {
+            assert.notEqual(manager.get(), null);
+            done();
+        });
+        it('should be able to close the connection without error', function(done) {
+            assert.notEqual(manager.close(), false);
+            assert.equal(manager.get, null);
+            done();
+        });
+    });
+});
