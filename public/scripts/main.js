@@ -68,10 +68,10 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 		var i = 0;
 		$scope.encycPage = []; //clear previous page data
 		for (x in $scope.encyclopediaEntries) {
-			if (i < 16*($scope.pageNum)) {
+			if (i < 24*($scope.pageNum)) {
 				i++;
 			}
-			else if (i == 16*($scope.pageNum+1)) {
+			else if (i == 24*($scope.pageNum+1)) {
 				break;
 			}
 			else {
