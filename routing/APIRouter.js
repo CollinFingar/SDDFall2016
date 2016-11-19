@@ -257,12 +257,19 @@ router.route('/user/bio')
     })
     .post(function(req, res, next) {
         var users = mongoManager.get().collection('users');
-        users.update({'username':req.decoded.username}, {$set: {'bio':req.body.newBio}}, function(err, result) {
-            if(err) {
-                res.status(500).send('Internal Server Error while pushing bio data to the database.');
-            }
-            res.status(200).send('Request Completed');
-        });
+
+        //Check if a new bio is included. Silly Users
+        if (req.body && req.body.newBio) {
+            users.update({'username':req.decoded.username}, {$set: {'bio':req.body.newBio}}, function(err, result) {
+                if(err) {
+                    res.status(500).send('Internal Server Error while pushing bio data to the database.');
+                }
+                res.status(200).send('Request Completed');
+            });
+        }
+        else {
+            res.status(400).send('No new bio given.');
+        }
     });
 
 /****

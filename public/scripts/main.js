@@ -1,6 +1,26 @@
 // This is the main application.
 var app = angular.module('theApp', []);
-var emailTextVar = "Not logged in"
+var emailTextVar = "Not logged in";
+
+app.service('collectionService', function(){
+    var collection = {};
+    var token = {};
+    return{
+        getCollection: function(){
+            return collection;
+        },
+        setCollection: function(newCollection){
+            collection = newCollection;
+        },
+        getToken: function(){
+            return token;
+        },
+        setToken: function(newToken){
+            token = newToken;
+        }
+    }
+});
+
 
 // This controller handles most of the card databasing
 app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
@@ -17,6 +37,7 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 	$scope.currentCard;
 
     $scope.addSearchResults = [];
+    $scope.userCollection = {}
 
     // This gathers the entire encyclopedia of information upon initialization
     $http({
@@ -71,7 +92,7 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 		} else {
 			return true;
 		}
-	}
+	};
 
     $scope.searchKeyword = function(){
         var v = document.getElementById("cardNameSearchText").value;
@@ -86,7 +107,40 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
         }, function myError(response) {
             console.log(response);
         });
-    }
+    };
+
+    $scope.retrieveCollection = function(){
+        $scope.userCollection = collectionService.getCollection();
+    };
+
+    $scope.addCardToCollection = function(card, type, amount){
+        cards = {
+            card.id : {
+                type: amount
+            }
+        }
+        $http({
+            method : "POST",
+            url : "http://localhost:3000/api/user/collection",
+            data : JSON.stringify(
+                {
+                    token : $scope.collectionService.getToken(),
+                    cards : cards
+                }
+            )
+        }).then(function mySuccess(response) {
+            // Upon success, this function happens
+            console.log("ADD CARD: SUCCESS");
+            console.log(response);
+
+        }, function myError(response) {
+            // Upon failure, this function happens
+            console.log("ADD CARD: FAILURE");
+            console.log(response);
+
+        });
+    };
+
 }]);
 
 // This controller handles all of the account handling (signing in/registering)
@@ -113,6 +167,8 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
             $scope.password = document.getElementById('loginPassword').value;
             $scope.emailText = document.getElementById('loginUName').value;
             $scope.token = response.data.token;
+            $scope.accessCollection();
+            $scope.collectionService.setToken($scope.token);
             console.log($scope.token);
             // Close the login/register pop up
             document.getElementById('id01').style.display='none';
@@ -146,6 +202,7 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
             $scope.password = document.getElementById('loginPassword').value;
             $scope.emailText = document.getElementById('loginUName').value;
             $scope.token = response.data.token;
+            $scope.collectionService.setToken($scope.token);
             // Close the login/register pop up
             document.getElementById('id01').style.display='none';
         }, function myError(response) {
@@ -155,13 +212,37 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
         });
     };
 
+
+    // Asks server to register using current email and password
+    $scope.accessCollection = function(){
+        console.log("Token " + $scope.token);
+        $http({
+            method : "GET",
+            url : "http://localhost:3000/api/user/collection",
+            headers :
+                {
+                    "Token": $scope.token
+                }
+
+        }).then(function mySuccess(response) {
+            // Upon success, this function happens
+            console.log(response);
+            console.log("CARD ACCESS: SUCCESS");
+        }, function myError(response) {
+            // Upon failure, this function happens
+            console.log(response);
+            console.log("CARD ACCESS: FAILURE");
+        });
+    };
+
     $scope.logOut = function(){
         $scope.email = "";
         $scope.password = "";
         $scope.token = "noToken";
         $scope.emailText = "Not logged in";
         emailTextVar = "Not logged in";
-    }
+    };
+
 
 }]);
 
