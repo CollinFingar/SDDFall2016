@@ -8,19 +8,15 @@ app.service('CollectionService', function(){
     var token = "noToken";
     return {
         getCollection: function(){
-            console.log("Getting Colelction");
             return collection;
         },
         setCollection: function(newCollection){
-            console.log("Setting Colelction");
             collection = newCollection;
         },
         getToken: function(){
-            console.log("Getting Token");
             return token;
         },
         setToken: function(newToken){
-            console.log("Setting Token");
             token = newToken;
         },
         isSignedIn: function(){
@@ -40,7 +36,6 @@ app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($sco
     $scope.tabTitles = [
         "Encyclopedia",
         "Collection",
-        "Pull-Rate",
         "Card Reader"];
     // Will contain all of the card objects
     $scope.encyclopediaEntries = [];
