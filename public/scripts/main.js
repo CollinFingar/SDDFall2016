@@ -120,13 +120,15 @@ app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($sco
         $scope.userCollection = CollectionService.getCollection();
     };
 
-    $scope.addCardToCollection = function(card){
+    $scope.addCardToCollection = function(cardid){
         var type = document.getElementById('cardType').value;
         var amount = document.getElementById('cardAmount').value;
         if(CollectionService.getToken() != "noToken"){
-            var cardid = card.id;
             var cards = {};
-            cards[cardid] = {type: amount};
+            var card = {};
+            card[type] = parseInt(amount);
+            cards[cardid] = card;
+            console.log(cards);
 
             $http({
                 method : "POST",
