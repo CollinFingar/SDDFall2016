@@ -22,6 +22,12 @@ app.service('CollectionService', function(){
         setToken: function(newToken){
             console.log("Setting Token");
             token = newToken;
+        },
+        isSignedIn: function(){
+            if(token == "noToken"){
+                return false;
+            }
+            return true;
         }
     };
 
@@ -54,9 +60,7 @@ app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($sco
     }).then(function mySucces(response) {
 		$scope.encyclopediaEntries = response.data;
 		$scope.loadSearchResults("encyclopedia");
-        console.log(response.data);
     }, function myError(response) {
-        console.log('FAILURE');
     });
     // This gathers the next grouping of cards to display
 	$scope.nextPage = function() {
@@ -135,17 +139,14 @@ app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($sco
 			value = document.getElementById("searchBarEncyclopedia").value;
 		}
 		var value = value.replace(" ","+");
-		console.log(value);
         $http({
             method : "GET",
             url : "http://localhost:3000/api/keysearch/" + value
         }).then(function mySuccess(response) {
-            console.log(response);
 			$scope.pageNum = 0;
     		$scope.searchResults = response.data;
 			$scope.loadSearchResults("keyword");
         }, function myError(response) {
-            console.log(response);
         });
     };
 
@@ -176,15 +177,17 @@ app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($sco
             }).then(function mySuccess(response) {
                 // Upon success, this function happens
                 console.log("ADD CARD: SUCCESS");
-                console.log(response);
 
             }, function myError(response) {
                 // Upon failure, this function happens
                 console.log("ADD CARD: FAILURE");
-                console.log(response);
 
             });
         }
+    };
+
+    $scope.isSignedIn = function(){
+        return CollectionService.isSignedIn();
     };
 }]);
 
@@ -262,7 +265,6 @@ app.controller('loginCtrl', ['$scope', '$http', 'CollectionService', function($s
 
     // Asks server to register using current email and password
     $scope.accessCollection = function(){
-        console.log("Token " + $scope.token);
         $http({
             method : "GET",
             url : "http://localhost:3000/api/user/collection",
@@ -273,11 +275,9 @@ app.controller('loginCtrl', ['$scope', '$http', 'CollectionService', function($s
 
         }).then(function mySuccess(response) {
             // Upon success, this function happens
-            console.log(response);
             console.log("COLLECTION ACCESS: SUCCESS");
         }, function myError(response) {
             // Upon failure, this function happens
-            console.log(response);
             console.log("COLLECTION ACCESS: FAILURE");
         });
     };
