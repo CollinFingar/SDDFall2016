@@ -8,3 +8,6 @@ node_modules/
 
 # NPM messages
 npm-debug.log
+
+#Spacemacs autosaves
+**/\.#*
