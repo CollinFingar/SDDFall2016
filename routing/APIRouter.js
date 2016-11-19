@@ -24,7 +24,7 @@ router.use(function(req, res, next) {
     console.log('Request path:' + req.path); //The url with query params but no /api
     console.log('Request Method:' + req.method); //The verb used in the request e.g. GET, PUT, POST, DELETE
     console.log('Request Query:' + JSON.stringify(req.query) + '\n'); //The JSON of the parsed query params
-    console.log('Request Body:' + req.body + '\n');
+    console.log('Request Body:' + JSON.stringify(req.body) + '\n');
     next();
 });
 
@@ -123,47 +123,145 @@ router.route('/signin')
     });
 
 //Middleware to ensure that the user is signed in
-router.route('/user', function(req, res, next) {
+router.use('/user', function(req, res, next) {
     //Check if the token is a valid token
-    if (res.body.token) {
-        var checkToken = res.body.token;
-
-        jwt.verify(token, authenticationKey, function(err, decoded) {
+    var checkToken = (req.body && req.body.token) || (req.query && req.query.token) || req.headers['token'];
+    if (checkToken) {
+        jwt.verify(checkToken, authenticationKey, function(err, decoded) {
             if (err) {
                 res.status(500);
+                res.send('Internal server error.');
+            }
+            else if (!(decoded === undefined)) {
+                //Congratulations on being in the VIP club
+                //Store the decoded credentials for use later in the route
+                req.decoded = decoded;
+                next();
+            }
+            else {
+                res.status(401);
                 res.send('Invalid access.');
             }
-
-            //Congratulations on being in the VIP club
-
-            //Store the decoded credentials for use later in the route
-            req.decoded = decoded;
-            next();
         });
     }
     else {
         res.status(500);
-        res.send('No token found.');
+        res.send('Authentication error.');
     }
 });
 
 router.route('/user/collection')
     .get(function(req, res, next) {
+        var users = mongoManager.get().collection('users');
+        var cards = mongoManager.get().collection('pokemon');
 
+
+        //Get the user collection card data
+        users.findOne( {username: req.decoded.username}, function(err, result) {
+            if (err) {
+                res.status(500);
+                res.send('Internal server error');
+            }
+
+            //Get the IDs of all of the cards that the user has in their collection
+            var userCards = Object.keys(result.cards);
+
+            //Query on the card database, but filter on the user's collection
+            var responseJSON = { };
+
+            cards.find( { 'id': { '$in': userCards } } ).sort( { 'name':1 } ).each(function(err, doc) {
+                if (err) {
+                    res.status(500);
+                    res.send('Internal Server Error');
+                }
+                //If there is data to write
+                if (doc !== null) {
+                    responseJSON[doc.id] = doc;
+                }
+                //If the cursor has reached the end of its data
+                else if (doc === null) {
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json(responseJSON);
+                }
+            });
+        });
     })
     .post(function(req, res, next) {
+        //Get the user collection
+        var users = mongoManager.get().collection('users');
 
+        users.findOne( {username: req.decoded.username}, function(err, result) {
+            if (err) {
+                res.status(500);
+                res.send('Internal server error');
+            }
+
+            //Check if the user included any cards to add. Silly Users
+            if ('cards' in req.body) {
+                //Get the user's card collection into memory (Map of card id's to Map of editions to counts)
+                var userCardsMap = result.cards;
+                //Get a reference to the new cards (Map of card id's to Map of editions to counts)
+                var newCards = req.body.cards;
+
+                var validEditions = ['1stEdition', 'Additional', 'Unlimited', 'RevHolo', 'Shadowless'];
+                for (var cardId in Object.keys(newCards)) {
+                    for (var edition in validEditions) {
+                        //Check if we need to add this edition
+                        if (edition in newCards[cardId]) {
+                            //Check if the card is in the user's collection
+                            if (cardId in userCardsMap) {
+                                //check if the editition is in the map for the user's cardID
+                                if (edition in userCardsMap[cardId]) {
+                                    userCardsMap[cardId][edition] += newCards[cardId][edition];
+                                }
+                                //else just add the edition to the card
+                                else {
+                                    userCardsMap[cardId][edition] = newCards[cardId][edition];
+                                }
+                            }
+                            //else add the card to the user collection with only the current edition
+                            else {
+                                userCardsMap[cardId] = { edition: newCards[cardId][edition] };
+                            }
+                        }
+                    }
+                }
+            }
+
+            //Push the new changes back up into mongo
+            users.update({'username':req.decoded.username}, {$set: {'cards':userCardsMap}}, function(err, result) {
+                if (err) {
+                    res.status(500).send('Internal server error');
+                }
+                res.status(200).send('Request Completed');
+            });
+        });
     });
 
-router.route('/bio')
+router.route('/user/bio')
+    .get(function(req, res, next) {
+        var users = mongoManager.get().collection('users');
+        users.findOne( {username: req.decoded.username}, function(err, result) {
+            if (err) {
+                res.status(500).send('Internal Server Error');
+            }
+
+            responseJSON = {'bio': result.bio};
+
+            res.setHeader('Content-Type', 'application/json');
+            res.json(responseJSON);
+        });
+    })
     .post(function(req, res, next) {
-        var Users = mongoManager.get().collection('users');
-        Users.update({'username':req.decoded.username}, {'bio':req.body.newBio}, function(err, result) {
+        var users = mongoManager.get().collection('users');
+        users.update({$set: {'username':req.decoded.username}}, {'bio':req.body.newBio}, function(err, result) {
             if(err) {
                 res.status(500).send('Internal Server Error');
             }
+            res.status(200).send('Request Completed');
         });
     });
+
 /****
 *
 * Routing that requires no authentication
@@ -206,7 +304,7 @@ router.route('/card/:id')
         var cursor = cards.find( { 'id':req.params.id } );
         cursor.nextObject(function(err, item) {
             if (err) {
-                res.status(504).send('Internal Server Error');
+                res.status(500).send('Internal Server Error');
             }
             else if (!item) {
                 res.status(404).send('Card not found');
