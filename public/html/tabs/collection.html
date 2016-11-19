@@ -1,4 +1,5 @@
 <button onclick="document.getElementById('id02').style.display='block'" style="width:auto; right: 7.5%; position: absolute;">Add Card</button>
+<!--
 <div id="id02" class="modal">
   <form class="modal-content animate">
     <div class="container">
@@ -33,7 +34,33 @@
     </div>
   </form>
 </div>
+-->
+<div id="id02" class="modal">
+  <form class="modal-content animate">
+    <div class="container">
 
+      <input type="text" placeholder="1" id="cardAmount" style="width:100px; color:black; text-align:right;">
+      <select style="color: black" id="cardType">
+          <option value="1stEdition">First Edition</option>
+          <option value="Additional">Additional</option>
+          <option value="Unlimited">Unlimited</option>
+          <option value="RevHolo">RevHolo</option>
+          <option value="Shadowless">Shadowless</option>
+      </select>
+      <br/>
+      <br/>
+
+
+
+    </div>
+    <div class="container" style="background-color:#f1f1f1; width:100%">
+        <button type="submit" ng-click="addCardToCollection('base1-1',
+                                        document.getElementById('cardType').value,
+                                        (number)document.getElementById('cardAmount').value">Add Card</button>
+        <button type="button" onclick="document.getElementById('id02').style.display='none'" class="cancelbtn" style="position:absolute; right: 5%">Cancel</button>
+    </div>
+  </form>
+</div>
 
 <h3>Collection</h3>
 <p>I'm in the collection tab!</p>

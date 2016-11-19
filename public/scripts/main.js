@@ -46,6 +46,7 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
     }).then(function mySucces(response) {
 		$scope.encyclopediaEntries = response.data;
 		$scope.loadPage();
+        console.log(response.data);
     }, function myError(response) {
         console.log('FAILURE');
     });
@@ -114,33 +115,33 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
     };
 
     $scope.addCardToCollection = function(card, type, amount){
-        cards = {
-            card.id : {
-                type: amount
-            }
+        if($scope.collectionService.getToken() != "noToken"){
+            var cardid = card.id;
+            var cards = {};
+            cards[cardid] = {type: amount};
+
+            $http({
+                method : "POST",
+                url : "http://localhost:3000/api/user/collection",
+                data : JSON.stringify(
+                    {
+                        token : $scope.collectionService.getToken(),
+                        cards : cards
+                    }
+                )
+            }).then(function mySuccess(response) {
+                // Upon success, this function happens
+                console.log("ADD CARD: SUCCESS");
+                console.log(response);
+
+            }, function myError(response) {
+                // Upon failure, this function happens
+                console.log("ADD CARD: FAILURE");
+                console.log(response);
+
+            });
         }
-        $http({
-            method : "POST",
-            url : "http://localhost:3000/api/user/collection",
-            data : JSON.stringify(
-                {
-                    token : $scope.collectionService.getToken(),
-                    cards : cards
-                }
-            )
-        }).then(function mySuccess(response) {
-            // Upon success, this function happens
-            console.log("ADD CARD: SUCCESS");
-            console.log(response);
-
-        }, function myError(response) {
-            // Upon failure, this function happens
-            console.log("ADD CARD: FAILURE");
-            console.log(response);
-
-        });
     };
-
 }]);
 
 // This controller handles all of the account handling (signing in/registering)
@@ -176,6 +177,7 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
             // Upon failure, this function happens
             $scope.emailText = "Not logged in.";
             $scope.token = "noToken";
+            $scope.collectionService.setToken($scope.token);
         });
         //When done
 
@@ -209,6 +211,7 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
             // Upon failure, this function happens
             $scope.emailText = "Not logged in.";
             $scope.token = "noToken";
+            $scope.collectionService.setToken($scope.token);
         });
     };
 
