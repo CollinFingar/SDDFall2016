@@ -1,22 +1,51 @@
 // This is the main application.
-var app = angular.module('theApp', []);
 var emailTextVar = "Not logged in";
 
+var app = angular.module('theApp', []);
+
+app.service('CollectionService', function(){
+    var collection = {};
+    var token = "noToken";
+    return {
+        getCollection: function(){
+            return collection;
+        },
+        setCollection: function(newCollection){
+            collection = newCollection;
+        },
+        getToken: function(){
+            return token;
+        },
+        setToken: function(newToken){
+            token = newToken;
+        },
+        isSignedIn: function(){
+            if(token == "noToken"){
+                return false;
+            }
+            return true;
+        }
+    };
+
+});
+
 // This controller handles most of the card databasing
-app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
+app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', function($scope, $http, $interval, CollectionService) {
     // Names of each of the html tabs
     $scope.tabTitles = [
         "Encyclopedia",
         "Collection",
-        "Pull-Rate",
         "Card Reader"];
     // Will contain all of the card objects
     $scope.encyclopediaEntries = [];
-    $scope.encycPage = [];
+	$scope.currentData = []; //current source of data page display is pulling from
+    $scope.cardPage = [];
     $scope.pageNum = 0;
 	$scope.currentCard;
 
     $scope.addSearchResults = [];
+	$scope.searchResults = [];
+    $scope.userCollection = {}
 
     // This gathers the entire encyclopedia of information upon initialization
     $http({
@@ -24,37 +53,54 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
         url : "http://localhost:3000/api/all"
     }).then(function mySucces(response) {
 		$scope.encyclopediaEntries = response.data;
-		$scope.loadPage();
+		$scope.loadSearchResults("encyclopedia");
     }, function myError(response) {
-        console.log('FAILURE');
     });
     // This gathers the next grouping of cards to display
 	$scope.nextPage = function() {
-		$scope.pageNum++;
-		$scope.loadPage();
+		$scope.loadSearchResults("next");
 	};
     // This gathers the previous grouping of cards to display
 	$scope.previousPage = function() {
 		if ($scope.pageNum != 0) {
-			$scope.pageNum--;
-			$scope.loadPage();
+			$scope.loadSearchResults("previous");
 		}
 	};
-    // This loads the image of each card in the current grouping
-	$scope.loadPage = function() {
+    // This loads the image of each card in a returned search
+	$scope.loadSearchResults = function(type) {
+		if (type == "keyword") {
+			$scope.currentData = $scope.searchResults;
+		} else if (type == "encyclopedia") {
+			$scope.currentData = $scope.encyclopediaEntries;
+		} else if (type == "next") {
+			$scope.pageNum++;
+		} else if (type == "previous") {
+			$scope.pageNum--;
+		}
 		localStorage.clear();
 		var i = 0;
-		$scope.encycPage = []; //clear previous page data
-		for (x in $scope.encyclopediaEntries) {
-			if (i < 16*($scope.pageNum)) {
+		var pageBackup = $scope.cardPage;
+		$scope.cardPage = []; //clear previous page data
+		for (x in $scope.currentData) {
+			if (i < 24*($scope.pageNum)) {
 				i++;
 			}
-			else if (i == 16*($scope.pageNum+1)) {
+			else if (i == 24*($scope.pageNum+1)) {
 				break;
 			}
 			else {
 				i++;
-				$scope.encycPage.push($scope.encyclopediaEntries[x]);
+				$scope.cardPage.push($scope.currentData[x]);
+			}
+		}
+		if ($scope.cardPage.length == 0) {
+			if (type == "next" || type == "previous") {
+				$scope.cardPage = pageBackup;
+				if (type == "next") {
+					$scope.pageNum--;
+				} else if (type == "previous") {
+					$scope.pageNum++;
+				}
 			}
 		}
 		$scope.$apply;
@@ -71,26 +117,78 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 		} else {
 			return true;
 		}
-	}
+	};
 
-    $scope.searchKeyword = function(){
-        var v = document.getElementById("cardNameSearchText").value;
-        console.log(v);
-        var value = v.replace(" ", "+");
+    $scope.searchKeyword = function(searchType){
+		var value;
+		if (searchType == "encyclopedia") {
+			value = document.getElementById("searchBarEncyclopedia").value;
+		}
+		var value = value.replace(" ","+");
         $http({
             method : "GET",
             url : "http://localhost:3000/api/keysearch/" + value
         }).then(function mySuccess(response) {
-            console.log(response);
-    		$scope.addSearchResults = response.data;
+			$scope.pageNum = 0;
+    		$scope.searchResults = response.data;
+			$scope.loadSearchResults("keyword");
         }, function myError(response) {
-            console.log(response);
         });
-    }
+    };
+
+    $scope.retrieveCollection = function(){
+        $scope.userCollection = CollectionService.getCollection();
+    };
+
+    $scope.addCardToCollection = function(){
+        var type = document.getElementById('cardType').value;
+        var amount = document.getElementById('cardAmount').value;
+        if(CollectionService.getToken() != "noToken"){
+            var cardid = $scope.currentCard.id;
+            var cards = {};
+            var card = {};
+            card[type] = parseInt(amount);
+            cards[cardid] = card;
+
+            $http({
+                method : "POST",
+                url : "http://localhost:3000/api/user/collection",
+                data : JSON.stringify(
+                    {
+                        token : CollectionService.getToken(),
+                        cards : cards
+                    }
+                )
+            }).then(function mySuccess(response) {
+                // Upon success, this function happens
+                document.getElementById('id03').style.display='none';
+            }, function myError(response) {
+                // Upon failure, this function happens
+
+            });
+        }
+    };
+
+    $scope.isSignedIn = function(){
+        return CollectionService.isSignedIn();
+    };
+
+    $scope.openAddCardModal = function(){
+        if($scope.isSignedIn()){
+            document.getElementById('id03').style.display='block';
+        }
+    };
+
+    $interval(function() {
+        if($scope.userCollection != CollectionService.getCollection()){
+            $scope.retrieveCollection();
+        } else {
+        }
+    }, 5000);
 }]);
 
 // This controller handles all of the account handling (signing in/registering)
-app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
+app.controller('loginCtrl', ['$scope', '$http', '$interval', 'CollectionService', function($scope, $http, $interval, CollectionService) {
     $scope.email = "";
     $scope.password = "";
 
@@ -113,13 +211,15 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
             $scope.password = document.getElementById('loginPassword').value;
             $scope.emailText = document.getElementById('loginUName').value;
             $scope.token = response.data.token;
-            console.log($scope.token);
+            $scope.accessCollection();
+            CollectionService.setToken($scope.token);
             // Close the login/register pop up
             document.getElementById('id01').style.display='none';
         }, function myError(response) {
             // Upon failure, this function happens
-            $scope.emailText = "Not logged in.";
+            $scope.emailText = "Not logged in";
             $scope.token = "noToken";
+            CollectionService.setToken($scope.token);
         });
         //When done
 
@@ -146,12 +246,33 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
             $scope.password = document.getElementById('loginPassword').value;
             $scope.emailText = document.getElementById('loginUName').value;
             $scope.token = response.data.token;
+            CollectionService.setToken($scope.token);
             // Close the login/register pop up
             document.getElementById('id01').style.display='none';
         }, function myError(response) {
             // Upon failure, this function happens
-            $scope.emailText = "Not logged in.";
+            $scope.emailText = "Not logged in";
             $scope.token = "noToken";
+            CollectionService.setToken($scope.token);
+        });
+    };
+
+
+    // Asks server to register using current email and password
+    $scope.accessCollection = function(){
+        $http({
+            method : "GET",
+            url : "http://localhost:3000/api/user/collection",
+            headers :
+                {
+                    "Token": $scope.token
+                }
+
+        }).then(function mySuccess(response) {
+            // Upon success, this function happens
+            CollectionService.setCollection(response.data);
+        }, function myError(response) {
+            // Upon failure, this function happens
         });
     };
 
@@ -161,7 +282,15 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
         $scope.token = "noToken";
         $scope.emailText = "Not logged in";
         emailTextVar = "Not logged in";
-    }
+        CollectionService.setCollection({});
+    };
+
+    $interval(function() {
+        if($scope.token != "noToken"){
+            $scope.accessCollection();
+        } else {
+        }
+    }, 10000);
 
 }]);
 

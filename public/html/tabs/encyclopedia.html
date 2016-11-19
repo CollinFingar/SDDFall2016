@@ -2,19 +2,26 @@
 <h3>Encyclopedia</h3>
 <p>I'm in the encyclopedia tab!</p>
 -->
-<div style="text-align:center;">
-	<div class="col-sm-3 col-xs-6" ng-repeat="x in encycPage">
+<span style="text-align: center">
+	Search by Keywords
+	<input id="searchBarEncyclopedia" type="text" style="color:black; width:50%">
+		<input ng-click="searchKeyword('encyclopedia')" style="border-color:#aa0000; background-color:#aa0000; color:white" type="submit" style="width:50%" value="Search"/>
+		<input ng-click="loadSearchResults('encyclopedia')" style="border-color:#aa0000; background-color:#aa0000; color:white" type="submit" style="width:50%" value="Clear"/> 
+	</input>
+</span>
+<div style="text-align:center">
+	<div class="col-md-3 col-sm-4 col-xs-6" ng-repeat="x in cardPage">
 		<a ng-click="cardData(x)">
 			<img ng-src= "{{x.imageUrl}}" style="width:122px; height:178px; margin-top:12%">
 		</a>
-		<br>{{x.name}}
+		<br>{{x.name | limitTo: 24}}{{x.name.length > 24 ? '...' : ''}}
 	</div>
 </div>
 <div style="text-align:center;">
-	<button ng-click="nextPage()"style="text-align: center;">
+	<button class="col-xs-12" ng-click="nextPage()"style="text-align: center;">
 		Next Page
 	</button>
-	<button ng-click="previousPage()">
+	<button class="col-xs-12" ng-click="previousPage()">
 		Previous Page
 	</button>
 </div>

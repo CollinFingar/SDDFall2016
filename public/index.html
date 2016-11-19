@@ -18,12 +18,12 @@
 
     <body>
         <!--Top div for the title-->
-        <div style="height: 15%; min-height: 100px;" ng-controller="loginCtrl">
+        <div style="height: 15%; min-height: 100px; background-color: #292929;" ng-controller="loginCtrl">
             <text class="makerText">TCG</text>
 
             <!--Login pop up code
                 this takes in inputed emails and passwords and passes them to the loginCtrl-->
-            <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;" class="topRight" >Login</button>
+            <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;" class="topRight" >Log In</button>
 
             <span class="loginTextTopRight" onmouseover="if(this.innerHTML!='Not logged in'){ emailTextVar = this.innerHTML; this.innerHTML = 'Log out of account'}"
             onmouseout="this.innerHTML = emailTextVar" ng-click="logOut()">{{emailText}}</span>
@@ -35,7 +35,7 @@
                   <input type="text" placeholder="Enter Email" name="uname" id="loginUName" required>
                   <label><b>Password</b></label>
                   <input type="password" placeholder="Enter Password" name="psw" id="loginPassword" required>
-                  <button type="submit" ng-click="signin()">Login</button><button type="submit" ng-click="register()">Register</button>
+                  <button type="submit" ng-click="signin()">Log In</button><button type="submit" ng-click="register()">Register</button>
                   <!--<input type="checkbox" checked="checked"> Remember me-->
                 </div>
                 <div class="container" style="background-color:#f1f1f1">
@@ -50,13 +50,12 @@
 
 
         <!--Middle div for the list and main page-->
-        <div  style="height: 170%; min-height: 1100px; margin-top: 2%; background-color:black;" ng-controller="theCtrl">
+        <div  style="margin-top: 2%; background-color:black;" ng-controller="theCtrl">
             <div>
                 <!--Tab List for the main pages-->
                 <ul class="tab" style="list-style-type: none;">
                     <li><a href="#" class="tablinks" onclick="openTab(event, 'Encyclopedia')" id="enc">Encyclopedia</a></li>
                     <li><a href="#" class="tablinks" onclick="openTab(event, 'Collection')" id="col">Collection</a></li>
-                    <li><a href="#" class="tablinks" onclick="openTab(event, 'Pull-Rate')" id="pr">Pull-Rate</a></li>
                     <li><a href="#" class="tablinks" onclick="openTab(event, 'Card Reader'); cardReaderOnLoad()" id="cr">Card Reader</a></li>
                 </ul>
             </div>
@@ -64,7 +63,6 @@
             <div class="mainAppDiv">
                 <div id="Encyclopedia" class="tabcontent" ng-include="'html/tabs/encyclopedia.html'"></div>
                 <div id="Collection" class="tabcontent" ng-include="'html/tabs/collection.html'"></div>
-                <div id="Pull-Rate" class="tabcontent" ng-include="'html/tabs/pull-rate.html'"></div>
                 <div id="Card Reader" class="tabcontent" ng-include="'html/tabs/cardreader.html'" ></div>
 				<div id="Card" class="tabcontent" ng-include="'html/tabs/card-display.html'"></div>
             </div>

@@ -1,39 +1,23 @@
-<button onclick="document.getElementById('id02').style.display='block'" style="width:auto; right: 7.5%; position: absolute;">Add Card</button>
-<div id="id02" class="modal">
-  <form class="modal-content animate">
-    <div class="container">
-        <div style="background-color:black; width:40%; position:absolute; right:5%; height: 175px; overflow-y: scroll; overflow-x: hidden;">
-            <div ng-repeat="x in addSearchResults">
-                <span style="color:white;">{{x.name}}</span>
-            </div>
-        </div>
-
-
-      <label style="color:black;"><b>Card Name</b></label>
-        </br>
-      <input type="text" placeholder="Pikachu" id="cardNameSearchText" style="color:black; width:40%;" ng-model="newSearch" ng-change="searchKeyword()">
-        </br>
-      <input type="text" placeholder="1" id="cardAmount" style="width:100px; color:black; text-align:right;">
-      <select style="color: black">
-          <option value="First Edition">First Edition</option>
-          <option value="Additional">Additional</option>
-          <option value="Unlimited">Unlimited</option>
-          <option value="RevHolo">RevHolo</option>
-          <option value="Shadowless">Shadowless</option>
-      </select>
-      <br/>
-      <br/>
-
-
-
-    </div>
-    <div class="container" style="background-color:#f1f1f1; width:100%">
-        <button type="submit" ng-click="signin()">Add Card</button>
-        <button type="button" onclick="document.getElementById('id02').style.display='none'" class="cancelbtn" style="position:absolute; right: 5%">Cancel</button>
-    </div>
-  </form>
+<span style="text-align: center">
+	Search by Keywords
+	<input id="searchBarEncyclopedia" type="text" style="color:black; width:50%">
+		<input ng-click="searchKeyword('encyclopedia')" style="border-color:#aa0000; background-color:#aa0000; color:white" type="submit" style="width:50%" value="Search"/>
+		<input ng-click="loadSearchResults('encyclopedia')" style="border-color:#aa0000; background-color:#aa0000; color:white" type="submit" style="width:50%" value="Clear"/>
+	</input>
+</span>
+<div style="text-align:center">
+	<div class="col-md-3 col-sm-4 col-xs-6" ng-repeat="x in cardPage">
+		<a ng-click="cardData(x)">
+			<img ng-src= "{{x.imageUrl}}" style="width:122px; height:178px; margin-top:12%">
+		</a>
+		<br>{{x.name | limitTo: 24}}{{x.name.length > 24 ? '...' : ''}}
+	</div>
 </div>
-
-
-<h3>Collection</h3>
-<p>I'm in the collection tab!</p>
+<div style="text-align:center;">
+	<button class="col-xs-12" ng-click="nextPage()"style="text-align: center;">
+		Next Page
+	</button>
+	<button class="col-xs-12" ng-click="previousPage()">
+		Previous Page
+	</button>
+</div>

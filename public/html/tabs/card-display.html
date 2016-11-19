@@ -1,15 +1,23 @@
+
+
+
+
+
 <div style="top: 20%";>
 	<div class="row">
 		<div align="center" class="col-md-8 col-sm-6">
 			<img ng-src= "{{currentCard.imageUrl}}" style="width:244px; height:364px;">
 		</div>
 		<div align="center" class="col-md-3 col-sm-6">
-			<table border="2">
+			<table style="background-color: #aa0000" border="2">
 				<tr ng-show="checkField(currentCard.name)">
-					<td border="2">Name</td> <td>{{currentCard.name}}
+					<td border="2">Name</td> <td>{{currentCard.name}}</td>
 				</tr>
 				<tr ng-show="checkField(currentCard.types)">
-					<td>Type(s)</td> <td>{{currentCard.types[0]}} {{currentCard.types[1]}}</td>
+					<td>Type(s)</td>
+					<td>
+						<span ng-repeat="x in currentCard.types">{{x}} </span>
+					</td>
 				</tr>
 				<tr ng-show="checkField(currentCard.hp)">
 					<td>HP</td> <td> {{currentCard.hp}}</td>
@@ -19,21 +27,30 @@
 					<td>
 						<div ng-repeat="x in currentCard.text">
 							{{x}}
-						</div>						
+						</div>
+					</td>
+				</tr>
+				<tr ng-show="checkField(currentCard.ability)">
+					<td>Ability</td>
+					<td>
+						<div ng-show="checkField(currentCard.ability.name)"><b>{{currentCard.ability.name}}</b></div>
+						<div ng-show="checkField(currentCard.ability.text)">{{currentCard.ability.text}}</div>
 					</td>
 				</tr>
 				<tr ng-show="checkField(currentCard.attacks)">
-					<td>Attack(s)</td> 
+					<td>Attack(s)</td>
 					<td>
 						<div ng-repeat="x in currentCard.attacks">
-							<div ng-show="checkField(x.name)"><b>{{x.name}}</b></div> 
-							<div ng-show="checkField(x.cost)">
+							<div ng-show="checkField(x.name)"><b>{{x.name}}</b></div>
+							<span ng-repeat="cost in x.cost track by $index" ng-show="checkField(x.cost)"> {{cost}} </span>
+							<!--
 								<div ng-repeat="c in x.cost">
 									{{c}}
 								</div>
 							</div>
+							-->
 							<div ng-show="checkField(x.damage)">{{x.damage}}</div>
-							<div ng-show="checkField(x.text)">{{x.text}}</div>							
+							<div ng-show="checkField(x.text)">{{x.text}}</div>
 						</div>
 					</td>
 				</tr>
@@ -49,15 +66,14 @@
 				<tr ng-show="checkField(currentCard.resistances)">
 					<td>Resistances</td>
 					<td>
-						<div ng-show="checkField(currentCard.resistances[0].type)"> <b>{{currentCard.resistances[0].type}}</b></div>
-						<div ng-show="checkField(currentCard.resistances[0].value)"> {{currentCard.resistances[0].value}}</div>
-						
-						<div ng-show="checkField(currentCard.resistances[1].type)"> <b>{{currentCard.resistances[1].type}}</b></div>
-						<div ng-show="checkField(currentCard.resistances[1].value)"> {{currentCard.resistances[1].value}}</div>
+						<div ng-repeat="x in currentCard.resistances">
+							<div ng-show="checkField(x.type)"> <b>{{x.type}}</b></div>
+							<div ng-show="checkField(x.value)"> {{x.value}}</div>
+						</div>
 					</td>
 				</tr>
 				<tr ng-show="checkField(currentCard.retreatCost)">
-					<td>Retreat Cost</td> 
+					<td>Retreat Cost</td>
 					<td>{{currentCard.retreatCost.length}}</td>
 				</tr>
 				<tr ng-show="checkField(currentCard.set)">
@@ -67,13 +83,40 @@
 					<td>Rarity</td> <td>{{currentCard.rarity}}</td>
 				</tr>
 			</table>
-			
+
 		</div>
 	</div>
 </div>
 
+
+
+<div id="id03" class="modal">
+  <form class="modal-content animate" style="width:40%">
+    <div class="container">
+
+      <input type="text" placeholder="1" id="cardAmount" style="width:100px; color:black; text-align:right;">
+      <select style="color: black" id="cardType">
+          <option value="1stEdition">First Edition</option>
+          <option value="Additional">Additional</option>
+          <option value="Unlimited">Unlimited</option>
+          <option value="RevHolo">RevHolo</option>
+          <option value="Shadowless">Shadowless</option>
+      </select>
+      <br/>
+      <br/>
+    </div>
+    <div class="container" style="background-color:#f1f1f1; width:100%">
+        <button type="submit" ng-click="addCardToCollection();">Add Card</button>
+        <button type="button" onclick="document.getElementById('id03').style.display='none'" class="cancelbtn" style="position:absolute; right: 5%">Cancel</button>
+    </div>
+  </form>
+</div>
+
+
+
 <div align="center" class="col-xs-12">
-	<button onClick="openTab(event,'Encyclopedia')"style="text-align: center;">
+	<button ng-click="openAddCardModal()" style="width: 60%; text-align:center;">Add Card to Collection</button>
+	<button style="background-color: #aa0000; width: 60%" onClick="openTab(event,'Encyclopedia')"style="text-align: center;">
 		Return to Encyclopedia
 	</button>
 </div>
