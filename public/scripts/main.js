@@ -59,46 +59,28 @@ app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($sco
     });
     // This gathers the next grouping of cards to display
 	$scope.nextPage = function() {
-		$scope.pageNum++;
-		$scope.loadSearchResults();
+		$scope.loadSearchResults("next");
 	};
     // This gathers the previous grouping of cards to display
 	$scope.previousPage = function() {
 		if ($scope.pageNum != 0) {
-			$scope.pageNum--;
-			$scope.loadSearchResults();
+			$scope.loadSearchResults("previous");
 		}
 	};
-	/*
-    // This loads the image of each card in the current grouping
-	$scope.loadPage = function() {
-		localStorage.clear();
-		var i = 0;
-		$scope.cardPage = []; //clear previous page data
-		for (x in $scope.encyclopediaEntries) {
-			if (i < 24*($scope.pageNum)) {
-				i++;
-			}
-			else if (i == 24*($scope.pageNum+1)) {
-				break;
-			}
-			else {
-				i++;
-				$scope.cardPage.push($scope.encyclopediaEntries[x]);
-			}
-		}
-		$scope.$apply;
-	};
-	*/
     // This loads the image of each card in a returned search
 	$scope.loadSearchResults = function(type) {
 		if (type == "keyword") {
 			$scope.currentData = $scope.searchResults;
 		} else if (type == "encyclopedia") {
 			$scope.currentData = $scope.encyclopediaEntries;
+		} else if (type == "next") {
+			$scope.pageNum++;
+		} else if (type == "previous") {
+			$scope.pageNum--;
 		}
 		localStorage.clear();
 		var i = 0;
+		var pageBackup = $scope.cardPage;
 		$scope.cardPage = []; //clear previous page data
 		for (x in $scope.currentData) {
 			if (i < 24*($scope.pageNum)) {
@@ -110,6 +92,16 @@ app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($sco
 			else {
 				i++;
 				$scope.cardPage.push($scope.currentData[x]);
+			}
+		}
+		if ($scope.cardPage.length == 0) {
+			if (type == "next" || type == "previous") {
+				$scope.cardPage = pageBackup;
+				if (type == "next") {
+					$scope.pageNum--;
+				} else if (type == "previous") {
+					$scope.pageNum++;
+				}
 			}
 		}
 		$scope.$apply;
