@@ -2,12 +2,12 @@
 <h3>Encyclopedia</h3>
 <p>I'm in the encyclopedia tab!</p>
 -->
-<div style="text-align:center;">
-	<div class="col-sm-3 col-xs-6" ng-repeat="x in encycPage">
+<div style="text-align:center">
+	<div class="col-md-3 col-sm-4 col-xs-6" ng-repeat="x in encycPage">
 		<a ng-click="cardData(x)">
 			<img ng-src= "{{x.imageUrl}}" style="width:122px; height:178px; margin-top:12%">
 		</a>
-		<br>{{x.name}}
+		<br>{{x.name | limitTo: 24}}{{x.name.length > 24 ? '...' : ''}}
 	</div>
 </div>
 <div style="text-align:center;">
