@@ -205,10 +205,15 @@ router.route('/user/collection')
                 var userCardsMap = result.cards;
                 //Get a reference to the new cards (Map of card id's to Map of editions to counts)
                 var newCards = req.body.cards;
+                var newCardsIDs = Object.keys(newCards);
 
                 var validEditions = ['1stEdition', 'Additional', 'Unlimited', 'RevHolo', 'Shadowless'];
-                for (var cardId in Object.keys(newCards)) {
-                    for (var edition of validEditions) {
+                var cardId = "";
+                var edition = "";
+                for (var i = 0; i < newCardsIDs.length; i++) {
+                    cardId = newCardsIDs[i];
+                    for (var j = 0; j < validEditions.length; j++) {
+                        edition = validEditions[j];
                         //Check if we need to add this edition
                         if (edition in newCards[cardId]) {
                             //Check if the card is in the user's collection
