@@ -170,7 +170,7 @@ router.route('/user/collection')
             //Query on the card database, but filter on the user's collection
             var responseJSON = { };
 
-            cards.find( { 'id': { '$in': userCardsIDs } } ).sort( { 'name':1 } ).each(function(err, doc) {
+            cards.find( { 'id': { '$in': userCardIDs } } ).sort( { 'name':1 } ).each(function(err, doc) {
                 if (err) {
                     res.status(500);
                     res.send('Internal Server Error while finding user cards in the encyclopedia data.');
