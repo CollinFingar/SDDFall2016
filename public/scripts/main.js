@@ -1,6 +1,6 @@
 // This is the main application.
 var app = angular.module('theApp', []);
-var emailTextVar = "Not logged in"
+var emailTextVar = "Not logged in";
 
 // This controller handles most of the card databasing
 app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
