@@ -31,7 +31,7 @@ router.use(function(req, res, next) {
 
 /****
 *
-* Routing that relates to user authentication
+* Routing that requires user authentication
 *
 ****/
 
@@ -130,7 +130,7 @@ router.use('/user', function(req, res, next) {
         jwt.verify(checkToken, authenticationKey, function(err, decoded) {
             if (err) {
                 res.status(500);
-                res.send('Internal server error.');
+                res.send('Internal server error while verifying token.');
             }
             else if (!(decoded === undefined)) {
                 //Congratulations on being in the VIP club
@@ -145,8 +145,8 @@ router.use('/user', function(req, res, next) {
         });
     }
     else {
-        res.status(500);
-        res.send('Authentication error.');
+        res.status(401);
+        res.send('No authentication token given.');
     }
 });
 
@@ -160,22 +160,25 @@ router.route('/user/collection')
         users.findOne( {username: req.decoded.username}, function(err, result) {
             if (err) {
                 res.status(500);
-                res.send('Internal server error');
+                res.send('Internal server error while finding user data.');
             }
 
             //Get the IDs of all of the cards that the user has in their collection
-            var userCards = Object.keys(result.cards);
+            var userCards = result.cards;
+            var userCardIDs = Object.keys(userCards);
 
             //Query on the card database, but filter on the user's collection
             var responseJSON = { };
 
-            cards.find( { 'id': { '$in': userCards } } ).sort( { 'name':1 } ).each(function(err, doc) {
+            cards.find( { 'id': { '$in': userCardsIDs } } ).sort( { 'name':1 } ).each(function(err, doc) {
                 if (err) {
                     res.status(500);
-                    res.send('Internal Server Error');
+                    res.send('Internal Server Error while finding user cards in the encyclopedia data.');
                 }
                 //If there is data to write
                 if (doc !== null) {
+                    //Add the card counts to the doc
+                    doc.counts = userCards[doc.id];
                     responseJSON[doc.id] = doc;
                 }
                 //If the cursor has reached the end of its data
@@ -193,7 +196,7 @@ router.route('/user/collection')
         users.findOne( {username: req.decoded.username}, function(err, result) {
             if (err) {
                 res.status(500);
-                res.send('Internal server error');
+                res.send('Internal server error while finding the user in the database.');
             }
 
             //Check if the user included any cards to add. Silly Users
@@ -231,7 +234,7 @@ router.route('/user/collection')
             //Push the new changes back up into mongo
             users.update({'username':req.decoded.username}, {$set: {'cards':userCardsMap}}, function(err, result) {
                 if (err) {
-                    res.status(500).send('Internal server error');
+                    res.status(500).send('Internal server error while pushing changes back to the database.');
                 }
                 res.status(200).send('Request Completed');
             });
@@ -243,7 +246,7 @@ router.route('/user/bio')
         var users = mongoManager.get().collection('users');
         users.findOne( {username: req.decoded.username}, function(err, result) {
             if (err) {
-                res.status(500).send('Internal Server Error');
+                res.status(500).send('Internal Server Error while finding the user data.');
             }
 
             responseJSON = {'bio': result.bio};
@@ -254,9 +257,9 @@ router.route('/user/bio')
     })
     .post(function(req, res, next) {
         var users = mongoManager.get().collection('users');
-        users.update({$set: {'username':req.decoded.username}}, {'bio':req.body.newBio}, function(err, result) {
+        users.update({'username':req.decoded.username}, {$set: {'bio':req.body.newBio}}, function(err, result) {
             if(err) {
-                res.status(500).send('Internal Server Error');
+                res.status(500).send('Internal Server Error while pushing bio data to the database.');
             }
             res.status(200).send('Request Completed');
         });
@@ -304,7 +307,7 @@ router.route('/card/:id')
         var cursor = cards.find( { 'id':req.params.id } );
         cursor.nextObject(function(err, item) {
             if (err) {
-                res.status(500).send('Internal Server Error');
+                res.status(500).send('Internal Server Error while querying the card\'s data');
             }
             else if (!item) {
                 res.status(404).send('Card not found');
@@ -348,7 +351,7 @@ router.route('/keysearch/:id')
 
         cards.find().each( function(err, doc) {
             if (err) {
-                res.status(500).send("herpaderp server error");
+                res.status(500).send('herpaderp server error');
             }
             else if (doc !== null) {
                 searchCards.push(doc);
