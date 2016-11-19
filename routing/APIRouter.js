@@ -208,12 +208,12 @@ router.route('/user/collection')
 
                 var validEditions = ['1stEdition', 'Additional', 'Unlimited', 'RevHolo', 'Shadowless'];
                 for (var cardId in Object.keys(newCards)) {
-                    for (var edition in validEditions) {
+                    for (var edition of validEditions) {
                         //Check if we need to add this edition
                         if (edition in newCards[cardId]) {
                             //Check if the card is in the user's collection
                             if (cardId in userCardsMap) {
-                                //check if the editition is in the map for the user's cardID
+                                //check if the edition is in the map for the user's cardID
                                 if (edition in userCardsMap[cardId]) {
                                     userCardsMap[cardId][edition] += newCards[cardId][edition];
                                 }
