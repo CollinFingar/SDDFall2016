@@ -1,29 +1,35 @@
 // This is the main application.
-var app = angular.module('theApp', []);
 var emailTextVar = "Not logged in";
 
-app.service('collectionService', function(){
+var app = angular.module('theApp', []);
+
+app.service('CollectionService', function(){
     var collection = {};
-    var token = {};
-    return{
+    var token = "noToken";
+    return {
         getCollection: function(){
+            console.log("Getting Colelction");
             return collection;
         },
         setCollection: function(newCollection){
+            console.log("Setting Colelction");
             collection = newCollection;
         },
         getToken: function(){
+            console.log("Getting Token");
             return token;
         },
         setToken: function(newToken){
+            console.log("Setting Token");
             token = newToken;
         }
-    }
+    };
+
 });
 
 
 // This controller handles most of the card databasing
-app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
+app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($scope, $http, CollectionService) {
     // Names of each of the html tabs
     $scope.tabTitles = [
         "Encyclopedia",
@@ -111,11 +117,13 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
     };
 
     $scope.retrieveCollection = function(){
-        $scope.userCollection = collectionService.getCollection();
+        $scope.userCollection = CollectionService.getCollection();
     };
 
-    $scope.addCardToCollection = function(card, type, amount){
-        if($scope.collectionService.getToken() != "noToken"){
+    $scope.addCardToCollection = function(card){
+        var type = document.getElementById('cardType').value;
+        var amount = document.getElementById('cardAmount').value;
+        if(CollectionService.getToken() != "noToken"){
             var cardid = card.id;
             var cards = {};
             cards[cardid] = {type: amount};
@@ -125,7 +133,7 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
                 url : "http://localhost:3000/api/user/collection",
                 data : JSON.stringify(
                     {
-                        token : $scope.collectionService.getToken(),
+                        token : CollectionService.getToken(),
                         cards : cards
                     }
                 )
@@ -145,7 +153,7 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 }]);
 
 // This controller handles all of the account handling (signing in/registering)
-app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
+app.controller('loginCtrl', ['$scope', '$http', 'CollectionService', function($scope, $http, CollectionService) {
     $scope.email = "";
     $scope.password = "";
 
@@ -169,7 +177,7 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
             $scope.emailText = document.getElementById('loginUName').value;
             $scope.token = response.data.token;
             $scope.accessCollection();
-            $scope.collectionService.setToken($scope.token);
+            CollectionService.setToken($scope.token);
             console.log($scope.token);
             // Close the login/register pop up
             document.getElementById('id01').style.display='none';
@@ -177,7 +185,7 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
             // Upon failure, this function happens
             $scope.emailText = "Not logged in.";
             $scope.token = "noToken";
-            $scope.collectionService.setToken($scope.token);
+            CollectionService.setToken($scope.token);
         });
         //When done
 
@@ -204,14 +212,14 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
             $scope.password = document.getElementById('loginPassword').value;
             $scope.emailText = document.getElementById('loginUName').value;
             $scope.token = response.data.token;
-            $scope.collectionService.setToken($scope.token);
+            CollectionService.setToken($scope.token);
             // Close the login/register pop up
             document.getElementById('id01').style.display='none';
         }, function myError(response) {
             // Upon failure, this function happens
             $scope.emailText = "Not logged in.";
             $scope.token = "noToken";
-            $scope.collectionService.setToken($scope.token);
+            CollectionService.setToken($scope.token);
         });
     };
 
@@ -230,11 +238,11 @@ app.controller('loginCtrl', ['$scope', '$http', function($scope, $http) {
         }).then(function mySuccess(response) {
             // Upon success, this function happens
             console.log(response);
-            console.log("CARD ACCESS: SUCCESS");
+            console.log("COLLECTION ACCESS: SUCCESS");
         }, function myError(response) {
             // Upon failure, this function happens
             console.log(response);
-            console.log("CARD ACCESS: FAILURE");
+            console.log("COLLECTION ACCESS: FAILURE");
         });
     };
 
