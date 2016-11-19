@@ -153,10 +153,11 @@ app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($sco
         $scope.userCollection = CollectionService.getCollection();
     };
 
-    $scope.addCardToCollection = function(cardid){
+    $scope.addCardToCollection = function(){
         var type = document.getElementById('cardType').value;
         var amount = document.getElementById('cardAmount').value;
         if(CollectionService.getToken() != "noToken"){
+            var cardid = $scope.currentCard.id;
             var cards = {};
             var card = {};
             card[type] = parseInt(amount);
