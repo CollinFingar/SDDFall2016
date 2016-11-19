@@ -38,11 +38,13 @@ app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($sco
         "Card Reader"];
     // Will contain all of the card objects
     $scope.encyclopediaEntries = [];
-    $scope.encycPage = [];
+	$scope.currentData = []; //current source of data page display is pulling from
+    $scope.cardPage = [];
     $scope.pageNum = 0;
 	$scope.currentCard;
 
     $scope.addSearchResults = [];
+	$scope.searchResults = [];
     $scope.userCollection = {}
 
     // This gathers the entire encyclopedia of information upon initialization
@@ -51,7 +53,7 @@ app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($sco
         url : "http://localhost:3000/api/all"
     }).then(function mySucces(response) {
 		$scope.encyclopediaEntries = response.data;
-		$scope.loadPage();
+		$scope.loadSearchResults("encyclopedia");
         console.log(response.data);
     }, function myError(response) {
         console.log('FAILURE');
@@ -59,20 +61,21 @@ app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($sco
     // This gathers the next grouping of cards to display
 	$scope.nextPage = function() {
 		$scope.pageNum++;
-		$scope.loadPage();
+		$scope.loadSearchResults();
 	};
     // This gathers the previous grouping of cards to display
 	$scope.previousPage = function() {
 		if ($scope.pageNum != 0) {
 			$scope.pageNum--;
-			$scope.loadPage();
+			$scope.loadSearchResults();
 		}
 	};
+	/*
     // This loads the image of each card in the current grouping
 	$scope.loadPage = function() {
 		localStorage.clear();
 		var i = 0;
-		$scope.encycPage = []; //clear previous page data
+		$scope.cardPage = []; //clear previous page data
 		for (x in $scope.encyclopediaEntries) {
 			if (i < 24*($scope.pageNum)) {
 				i++;
@@ -82,7 +85,32 @@ app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($sco
 			}
 			else {
 				i++;
-				$scope.encycPage.push($scope.encyclopediaEntries[x]);
+				$scope.cardPage.push($scope.encyclopediaEntries[x]);
+			}
+		}
+		$scope.$apply;
+	};
+	*/
+    // This loads the image of each card in a returned search
+	$scope.loadSearchResults = function(type) {
+		if (type == "keyword") {
+			$scope.currentData = $scope.searchResults;
+		} else if (type == "encyclopedia") {
+			$scope.currentData = $scope.encyclopediaEntries;
+		}
+		localStorage.clear();
+		var i = 0;
+		$scope.cardPage = []; //clear previous page data
+		for (x in $scope.currentData) {
+			if (i < 24*($scope.pageNum)) {
+				i++;
+			}
+			else if (i == 24*($scope.pageNum+1)) {
+				break;
+			}
+			else {
+				i++;
+				$scope.cardPage.push($scope.currentData[x]);
 			}
 		}
 		$scope.$apply;
@@ -101,16 +129,21 @@ app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($sco
 		}
 	};
 
-    $scope.searchKeyword = function(){
-        var v = document.getElementById("cardNameSearchText").value;
-        console.log(v);
-        var value = v.replace(" ", "+");
+    $scope.searchKeyword = function(searchType){
+		var value;
+		if (searchType == "encyclopedia") {
+			value = document.getElementById("searchBarEncyclopedia").value;
+		}
+		var value = value.replace(" ","+");
+		console.log(value);
         $http({
             method : "GET",
             url : "http://localhost:3000/api/keysearch/" + value
         }).then(function mySuccess(response) {
             console.log(response);
-    		$scope.addSearchResults = response.data;
+			$scope.pageNum = 0;
+    		$scope.searchResults = response.data;
+			$scope.loadSearchResults("keyword");
         }, function myError(response) {
             console.log(response);
         });
