@@ -150,7 +150,6 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
             var card = {};
             card[type] = parseInt(amount);
             cards[cardid] = card;
-            console.log(cards);
 
             $http({
                 method : "POST",
@@ -163,11 +162,9 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
                 )
             }).then(function mySuccess(response) {
                 // Upon success, this function happens
-                console.log("ADD CARD: SUCCESS");
                 document.getElementById('id03').style.display='none';
             }, function myError(response) {
                 // Upon failure, this function happens
-                console.log("ADD CARD: FAILURE");
 
             });
         }
@@ -175,6 +172,12 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
 
     $scope.isSignedIn = function(){
         return CollectionService.isSignedIn();
+    };
+
+    $scope.openAddCardModal = function(){
+        if($scope.isSignedIn()){
+            document.getElementById('id03').style.display='block';
+        }
     };
 
     $interval(function() {
@@ -186,7 +189,7 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
 }]);
 
 // This controller handles all of the account handling (signing in/registering)
-app.controller('loginCtrl', ['$scope', '$http', 'CollectionService', function($scope, $http, CollectionService) {
+app.controller('loginCtrl', ['$scope', '$http', '$interval', 'CollectionService', function($scope, $http, $interval, CollectionService) {
     $scope.email = "";
     $scope.password = "";
 
@@ -211,7 +214,6 @@ app.controller('loginCtrl', ['$scope', '$http', 'CollectionService', function($s
             $scope.token = response.data.token;
             $scope.accessCollection();
             CollectionService.setToken($scope.token);
-            console.log($scope.token);
             // Close the login/register pop up
             document.getElementById('id01').style.display='none';
         }, function myError(response) {
@@ -270,10 +272,8 @@ app.controller('loginCtrl', ['$scope', '$http', 'CollectionService', function($s
         }).then(function mySuccess(response) {
             // Upon success, this function happens
             CollectionService.setCollection(response.data);
-            console.log("COLLECTION ACCESS: SUCCESS");
         }, function myError(response) {
             // Upon failure, this function happens
-            console.log("COLLECTION ACCESS: FAILURE");
         });
     };
 
@@ -286,6 +286,12 @@ app.controller('loginCtrl', ['$scope', '$http', 'CollectionService', function($s
         CollectionService.setCollection({});
     };
 
+    $interval(function() {
+        if($scope.token != "noToken"){
+            $scope.accessCollection();
+        } else {
+        }
+    }, 10000);
 
 }]);
 
