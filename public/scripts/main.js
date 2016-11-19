@@ -73,15 +73,18 @@ app.controller('theCtrl', ['$scope', '$http', function($scope, $http) {
 		}
 	}
 
-    $scope.searchKeyword = function(key){
-        var value = document.getElementById("cardNameSearchText").value;
+    $scope.searchKeyword = function(){
+        var v = document.getElementById("cardNameSearchText").value;
+        console.log(v);
+        var value = v.replace(" ", "+");
         $http({
             method : "GET",
-            url : "http://localhost:3000/api/keyword/" + value
-        }).then(function mySucces(response) {
+            url : "http://localhost:3000/api/keysearch/" + value
+        }).then(function mySuccess(response) {
+            console.log(response);
     		$scope.addSearchResults = response.data;
         }, function myError(response) {
-            console.log('FAILURE');
+            console.log(response);
         });
     }
 }]);
