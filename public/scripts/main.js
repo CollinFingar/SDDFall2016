@@ -31,7 +31,7 @@ app.service('CollectionService', function(){
 
 
 // This controller handles most of the card databasing
-app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($scope, $http, CollectionService) {
+app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', function($scope, $http, $interval, CollectionService) {
     // Names of each of the html tabs
     $scope.tabTitles = [
         "Encyclopedia",
@@ -164,7 +164,7 @@ app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($sco
             }).then(function mySuccess(response) {
                 // Upon success, this function happens
                 console.log("ADD CARD: SUCCESS");
-
+                document.getElementById('id03').style.display='none';
             }, function myError(response) {
                 // Upon failure, this function happens
                 console.log("ADD CARD: FAILURE");
@@ -176,6 +176,13 @@ app.controller('theCtrl', ['$scope', '$http', 'CollectionService', function($sco
     $scope.isSignedIn = function(){
         return CollectionService.isSignedIn();
     };
+
+    $interval(function() {
+        if($scope.userCollection != CollectionService.getCollection()){
+            $scope.retrieveCollection();
+        } else {
+        }
+    }, 5000);
 }]);
 
 // This controller handles all of the account handling (signing in/registering)
@@ -209,7 +216,7 @@ app.controller('loginCtrl', ['$scope', '$http', 'CollectionService', function($s
             document.getElementById('id01').style.display='none';
         }, function myError(response) {
             // Upon failure, this function happens
-            $scope.emailText = "Not logged in.";
+            $scope.emailText = "Not logged in";
             $scope.token = "noToken";
             CollectionService.setToken($scope.token);
         });
@@ -243,7 +250,7 @@ app.controller('loginCtrl', ['$scope', '$http', 'CollectionService', function($s
             document.getElementById('id01').style.display='none';
         }, function myError(response) {
             // Upon failure, this function happens
-            $scope.emailText = "Not logged in.";
+            $scope.emailText = "Not logged in";
             $scope.token = "noToken";
             CollectionService.setToken($scope.token);
         });
@@ -262,6 +269,7 @@ app.controller('loginCtrl', ['$scope', '$http', 'CollectionService', function($s
 
         }).then(function mySuccess(response) {
             // Upon success, this function happens
+            CollectionService.setCollection(response.data);
             console.log("COLLECTION ACCESS: SUCCESS");
         }, function myError(response) {
             // Upon failure, this function happens
@@ -275,6 +283,7 @@ app.controller('loginCtrl', ['$scope', '$http', 'CollectionService', function($s
         $scope.token = "noToken";
         $scope.emailText = "Not logged in";
         emailTextVar = "Not logged in";
+        CollectionService.setCollection({});
     };
 
 
