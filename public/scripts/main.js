@@ -124,19 +124,36 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
 		var value;
 		if (searchType == "encyclopedia") {
 			value = document.getElementById("searchBarEncyclopedia").value;
+            value = value.replace(" ","+");
+            $http({
+                method : "GET",
+                url : "http://localhost:3000/api/keysearch/" + value
+            }).then(function mySuccess(response) {
+                $scope.pageNum = 0;
+                $scope.searchResults = response.data;
+                $scope.loadSearchResults("keyword");
+            }, function myError(response) {
+
+            });
 		} else if(searchType == "collection"){
             value = document.getElementById("searchBarCollection").value;
+            value = value.replace(" ","+");
+            $http({
+                method : "GET",
+                url : "http://localhost:3000/api/user/collection/keysearch/" + value,
+                headers :
+                    {
+                        "Token": CollectionService.getToken()
+                    }
+            }).then(function mySuccess(response) {
+                $scope.pageNum = 0;
+                $scope.searchResults = response.data;
+                $scope.loadSearchResults("keyword");
+            }, function myError(response) {
+
+            });
         }
-		var value = value.replace(" ","+");
-        $http({
-            method : "GET",
-            url : "http://localhost:3000/api/keysearch/" + value
-        }).then(function mySuccess(response) {
-			$scope.pageNum = 0;
-    		$scope.searchResults = response.data;
-			$scope.loadSearchResults("keyword");
-        }, function myError(response) {
-        });
+
     };
 
     $scope.retrieveCollection = function(){
@@ -293,7 +310,7 @@ app.controller('loginCtrl', ['$scope', '$http', '$interval', 'CollectionService'
             $scope.accessCollection();
         } else {
         }
-    }, );
+    }, 5000 );
 
 }]);
 
