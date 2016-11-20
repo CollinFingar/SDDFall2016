@@ -247,6 +247,68 @@ router.route('/user/collection')
         });
     });
 
+router.route('/user/collection/keysearch/:id')
+    .get(function(req, res, next) {
+    //     var users = mongoManager.get().collection('users');
+    //     var cards = mongoManager.get().collection('pokemon');
+
+
+    //     //Get the user collection card data
+    //     users.findOne( {username: req.decoded.username}, function(err, result) {
+    //         if (err) {
+    //             res.status(500);
+    //             res.send('Internal server error while finding user data.');
+    //         }
+
+    //         //Get the IDs of all of the cards that the user has in their collection
+    //         var userCards = result.cards;
+    //         var userCardIDs = Object.keys(userCards);
+
+    //         //Query on the card database, but filter on the user's collection
+    //         var responseJSON = { };
+
+    //         cards.find( { 'id': { '$in': userCardIDs } } ).sort( { 'name':1 } ).each(function(err, doc) {
+
+        var options = {shouldSort: true,threshold: 0.2,location: 0,distance: 100,maxPatternLength: 32,tokenize:true,keys:["name","ability.name","ability.text","attacks","attacks.name","attacks.text","hp"]};
+        var cards = mongoManager.get().collection('pokemon');
+        var users = monoManager.get().collection('users');
+        searchKeys = (req.params.id).replace("+", " ");
+        searchCards = [];
+
+        var results = [];
+        var f = new Fuse([], options);
+
+        users.findOne( {username: req.decoded.username}, function(err, result) {
+            if (err) {
+                res.status(500);
+                res.send('Internal server error while finding user data.');
+            }
+
+            //Get the IDs of all of the cards that the user has in their collection
+            var userCards = result.cards;
+            var userCardIDs = Object.keys(userCards);
+
+            cards.find({ 'id': {'$in': userCardIDs } } ).sort( {'name': 1 }).each( function(err, doc) {
+                if (err) {
+                    res.status(500).send('herpaderp server error');
+                }
+                else if (doc !== null) {
+                    searchCards.push(doc);
+                }
+                else if (doc === null) {
+                    f = new Fuse(searchCards, options);
+                    results = f.search(searchKeys);
+
+                    for (var i = 0; i < results.length; i++) {
+                        results[i].counts = userCards[results[i].id];
+                    }
+
+                    res.send(results);
+                }
+            });
+        });
+    });
+
 router.route('/user/bio')
     .get(function(req, res, next) {
         var users = mongoManager.get().collection('users');
