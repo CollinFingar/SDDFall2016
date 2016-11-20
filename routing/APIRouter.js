@@ -234,15 +234,78 @@ router.route('/user/collection')
                         }
                     }
                 }
+
+                //Push the new changes back up into mongo
+                users.update({'username':req.decoded.username}, {$set: {'cards':userCardsMap}}, function(err, result) {
+                    if (err) {
+                        res.status(500).send('Internal server error while pushing changes back to the database.');
+                    }
+                    res.status(200).send('Request Completed');
+                });
+            }
+        });
+    })
+    .delete(function(req, res, next) {
+        //Get the user collection
+        var users = mongoManager.get().collection('users');
+
+        users.findOne( {username: req.decoded.username}, function(err, result) {
+            if (err) {
+                res.status(500);
+                res.send('Internal server error while finding the user in the database.');
             }
 
-            //Push the new changes back up into mongo
-            users.update({'username':req.decoded.username}, {$set: {'cards':userCardsMap}}, function(err, result) {
-                if (err) {
-                    res.status(500).send('Internal server error while pushing changes back to the database.');
+            //Check if the user included any cards to delete. Silly Users
+            if ('cards' in req.body) {
+                //Get the user's card collection into memory (Map of card id's to Map of editions to counts)
+                var userCardsMap = result.cards;
+                //Get a reference to the cards to delete (Map of card id's to Map of editions to counts)
+                var deleteCards = req.body.cards;
+                var deleteCardsIDs = Object.keys(deleteCards);
+
+                var validEditions = ['1stEdition', 'Additional', 'Unlimited', 'RevHolo', 'Shadowless'];
+                var cardId = "";
+                var edition = "";
+                for (var i = 0; i < deleteCards.length; i++) {
+                    cardId = deleteCardsIDs[i];
+                    for (var j = 0; j < validEditions.length; j++) {
+                        edition = validEditions[j];
+                        //Check if we need to delete this edition
+                        if (edition in deleteCards[cardId]) {
+                            //Check that the user has that edition and card in their collection
+                            if (cardId in userCardsMap && edition in userCardsMap[cardId]) {
+                                var currentEditionCount = userCardsMap[cardId][edition];
+                                var deleteAmount = deleteCards[cardId][edition];
+
+                                var newEditionCount = currentEditionCount - deleteAmount;
+
+                                //Need to update the new edition count, or remove the edition from the map accordingly
+                                if (newEditionCount >= 0) {
+                                    userCardsMap[cardId][edition] = newEditionCount;
+                                }
+                                else {
+                                    delete userCardsMap[cardId][edition];
+
+                                    //We also need to check if the user has no more cards of type cardId
+                                    var editionsRemaining = userCardsMap[cardId].length;
+
+                                    if (editionsRemaining == 0) {
+                                        delete userCardsMap[cardId];
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                res.status(200).send('Request Completed');
-            });
+
+                //Push the new changes back up into mongo
+                users.update({'username':req.decoded.username}, {$set: {'cards':userCardsMap}}, function(err, result) {
+                    if (err) {
+                        res.status(500).send('Internal server error while pushing changes back to the database.');
+                    }
+                    res.status(200).send('Request Completed');
+                });
+            }
         });
     });
 
