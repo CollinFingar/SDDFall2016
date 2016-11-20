@@ -250,7 +250,7 @@ router.route('/user/collection/keysearch/:id')
     .get(function(req, res, next) {
         var options = {shouldSort: true,threshold: 0.2,location: 0,distance: 100,maxPatternLength: 32,tokenize:true,keys:["name","ability.name","ability.text","attacks","attacks.name","attacks.text","hp"]};
         var cards = mongoManager.get().collection('pokemon');
-        var users = monoManager.get().collection('users');
+        var users = mongoManager.get().collection('users');
         searchKeys = (req.params.id).replace("+", " ");
         searchCards = [];
 
@@ -392,7 +392,7 @@ router.route('/set/:id')
     });
 
 router.route('/keysearch/:id')
-    .get(function(req, res, next) {req
+    .get(function(req, res, next) {
 
         var options = {shouldSort: true,threshold: 0.2,location: 0,distance: 100,maxPatternLength: 32,tokenize:true,keys:["name","ability.name","ability.text","attacks","attacks.name","attacks.text","hp"]};
         var cards = mongoManager.get().collection('pokemon');
