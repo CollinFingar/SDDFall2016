@@ -54,9 +54,8 @@
             <div>
                 <!--Tab List for the main pages-->
                 <ul class="tab" style="list-style-type: none;">
-                    <li><a href="#" class="tablinks" onclick="openTab(event, 'Encyclopedia')" id="enc">Encyclopedia</a></li>
-                    <li><a href="#" class="tablinks" onclick="openTab(event, 'Collection')" id="col">Collection</a></li>
-                    <li><a href="#" class="tablinks" onclick="openTab(event, 'Card Reader'); cardReaderOnLoad()" id="cr">Card Reader</a></li>
+                    <li><a href="#" class="tablinks" onclick="openTab(event, 'Encyclopedia')" ng-click="loadSearchResults('encyclopedia');" id="enc">Encyclopedia</a></li>
+                    <li><a href="#" class="tablinks" onclick="openTab(event, 'Collection')" ng-click="loadSearchResults('collection');" id="col">Collection</a></li>
                 </ul>
             </div>
             <!--Load pages from the html folder-->

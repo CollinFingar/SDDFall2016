@@ -35,8 +35,7 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
     // Names of each of the html tabs
     $scope.tabTitles = [
         "Encyclopedia",
-        "Collection",
-        "Card Reader"];
+        "Collection"];
     // Will contain all of the card objects
     $scope.encyclopediaEntries = [];
 	$scope.currentData = []; //current source of data page display is pulling from
@@ -77,7 +76,9 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
 			$scope.pageNum++;
 		} else if (type == "previous") {
 			$scope.pageNum--;
-		}
+		} else if(type == "collection"){
+            $scope.currentData = $scope.userCollection;
+        }
 		localStorage.clear();
 		var i = 0;
 		var pageBackup = $scope.cardPage;
@@ -124,7 +125,9 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
 		var value;
 		if (searchType == "encyclopedia") {
 			value = document.getElementById("searchBarEncyclopedia").value;
-		}
+		} else if(searchType == "collection"){
+            value = document.getElementById("searchBarCollection").value;
+        }
 		var value = value.replace(" ","+");
         $http({
             method : "GET",
@@ -291,7 +294,7 @@ app.controller('loginCtrl', ['$scope', '$http', '$interval', 'CollectionService'
             $scope.accessCollection();
         } else {
         }
-    }, 10000);
+    }, );
 
 }]);
 

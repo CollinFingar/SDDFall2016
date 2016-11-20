@@ -1,8 +1,8 @@
 <span style="text-align: center">
 	Search by Keywords
-	<input id="searchBarEncyclopedia" type="text" style="color:black; width:50%">
-		<input ng-click="searchKeyword('encyclopedia')" style="border-color:#aa0000; background-color:#aa0000; color:white" type="submit" style="width:50%" value="Search"/>
-		<input ng-click="loadSearchResults('encyclopedia')" style="border-color:#aa0000; background-color:#aa0000; color:white" type="submit" style="width:50%" value="Clear"/>
+	<input id="searchBarCollection" type="text" style="color:black; width:50%">
+		<input ng-click="searchKeyword('collection')" style="border-color:#aa0000; background-color:#aa0000; color:white" type="submit" style="width:50%" value="Search"/>
+		<input ng-click="loadSearchResults('collection')" style="border-color:#aa0000; background-color:#aa0000; color:white" type="submit" style="width:50%" value="Clear"/>
 	</input>
 </span>
 <div style="text-align:center">
@@ -10,7 +10,7 @@
 		<a ng-click="cardData(x)">
 			<img ng-src= "{{x.imageUrl}}" style="width:122px; height:178px; margin-top:12%">
 		</a>
-		<br>{{x.name | limitTo: 24}}{{x.name.length > 24 ? '...' : ''}}
+		<br>{{x.name | limitTo: 24}}{{x.name.length > 24 ? '...' : ''}}  <span style="color: #FF3333;">{{x.counts.edition}}</span>
 	</div>
 </div>
 <div style="text-align:center;">
