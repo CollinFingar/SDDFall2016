@@ -2,7 +2,6 @@
 var mongoManager = require('../mongo/mongoManager');
 var assert = require('assert');
 var Fuse = require('fuse.js');
-var Tesseract = require('tesseract.js');
 
 mongoManager.connect('mongodb://localhost:27017/card', function(err) {
     if (err) {
@@ -417,33 +416,6 @@ router.route('/keysearch/:id')
                 res.send(results);
             }
         });
-    });
-
-router.route('/cardscan')
-    .post(function(req, res, next) {
-        //console.log("stuff " + req.body.body);
-        //var myImage = Buffer.from(req.body.body, 'base64');
-
-        var BASE64_MARKER = ';base64,';
-        var base64Index = req.body.data.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
-        var base64 = req.body.data.substring(base64Index);
-        var raw = Buffer.from(base64, 'base64'); // Ta-da
-        var rawLength = raw.length;
-        var array = new Uint8Array(new ArrayBuffer(rawLength));
-
-        for(i = 0; i < rawLength; i++) {
-            array[i] = raw.readUInt8(i);
-        }
-
-        var myImage = {'data':array, 'width':640, 'height':480};
-
-        Tesseract.recognize(raw)
-        .then(function(result){
-            console.log(result.text)
-            console.log('done');
-        })
-
-        res.send(req.body.data);
     });
 
 //Route 404 for the rest of the requests
