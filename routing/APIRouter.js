@@ -2,6 +2,7 @@
 var mongoManager = require('../mongo/mongoManager');
 var assert = require('assert');
 var Fuse = require('fuse.js');
+var Tesseract = require('tesseract.js');
 
 mongoManager.connect('mongodb://localhost:27017/card', function(err) {
     if (err) {
@@ -246,6 +247,48 @@ router.route('/user/collection')
         });
     });
 
+router.route('/user/collection/keysearch/:id')
+    .get(function(req, res, next) {
+        var options = {shouldSort: true,threshold: 0.2,location: 0,distance: 100,maxPatternLength: 32,tokenize:true,keys:["name","ability.name","ability.text","attacks","attacks.name","attacks.text","hp"]};
+        var cards = mongoManager.get().collection('pokemon');
+        var users = monoManager.get().collection('users');
+        searchKeys = (req.params.id).replace("+", " ");
+        searchCards = [];
+
+        var results = [];
+        var f = new Fuse([], options);
+
+        users.findOne( {username: req.decoded.username}, function(err, result) {
+            if (err) {
+                res.status(500);
+                res.send('Internal server error while finding user data.');
+            }
+
+            //Get the IDs of all of the cards that the user has in their collection
+            var userCards = result.cards;
+            var userCardIDs = Object.keys(userCards);
+
+            cards.find({ 'id': {'$in': userCardIDs } } ).sort( {'name': 1 }).each( function(err, doc) {
+                if (err) {
+                    res.status(500).send('herpaderp server error');
+                }
+                else if (doc !== null) {
+                    searchCards.push(doc);
+                }
+                else if (doc === null) {
+                    f = new Fuse(searchCards, options);
+                    results = f.search(searchKeys);
+
+                    for (var i = 0; i < results.length; i++) {
+                        results[i].counts = userCards[results[i].id];
+                    }
+
+                    res.send(results);
+                }
+            });
+        });
+    });
+
 router.route('/user/bio')
     .get(function(req, res, next) {
         var users = mongoManager.get().collection('users');
@@ -350,7 +393,7 @@ router.route('/set/:id')
     });
 
 router.route('/keysearch/:id')
-    .get(function(req, res, next) {
+    .get(function(req, res, next) {req
 
         var options = {shouldSort: true,threshold: 0.2,location: 0,distance: 100,maxPatternLength: 32,tokenize:true,keys:["name","ability.name","ability.text","attacks","attacks.name","attacks.text","hp"]};
         var cards = mongoManager.get().collection('pokemon');
@@ -374,6 +417,33 @@ router.route('/keysearch/:id')
                 res.send(results);
             }
         });
+    });
+
+router.route('/cardscan')
+    .post(function(req, res, next) {
+        //console.log("stuff " + req.body.body);
+        //var myImage = Buffer.from(req.body.body, 'base64');
+
+        var BASE64_MARKER = ';base64,';
+        var base64Index = req.body.data.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+        var base64 = req.body.data.substring(base64Index);
+        var raw = Buffer.from(base64, 'base64'); // Ta-da
+        var rawLength = raw.length;
+        var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+        for(i = 0; i < rawLength; i++) {
+            array[i] = raw.readUInt8(i);
+        }
+
+        var myImage = {'data':array, 'width':640, 'height':480};
+
+        Tesseract.recognize(raw)
+        .then(function(result){
+            console.log(result.text)
+            console.log('done');
+        })
+
+        res.send(req.body.data);
     });
 
 //Route 404 for the rest of the requests

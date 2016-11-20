@@ -29,7 +29,6 @@ app.service('CollectionService', function(){
 
 });
 
-
 // This controller handles most of the card databasing
 app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', function($scope, $http, $interval, CollectionService) {
     // Names of each of the html tabs

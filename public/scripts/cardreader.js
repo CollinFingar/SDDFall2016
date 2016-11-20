@@ -11,17 +11,29 @@ function cardReaderOnLoad() {
 
     function snapshot() {
       if (localMediaStream) {
-        
-        console.log(result);
-
 
         ctx.drawImage(video, 0, 0);
         // "image/webp" works in Chrome.
         // Other browsers will fall back to image/png.
-        document.getElementById('readerimage').src = canvas.toDataURL('image/webp');
+        //document.getElementById('readerimage').src = canvas.toDataURL('png');
 
-        var gh = canvas.toDataURL('png');
+        var gh = canvas.toDataURL('image/jpeg');
 
+        var xhttp = new XMLHttpRequest();
+        // xhttp.open("POST", "https://api.ocr.space/parse/image")
+        // xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        // xhttp.onreadystatechange = function(){
+        //     //document.getElementById('readerimage').src = xhttp.responseText;
+        //     console.log(xhttp.responseText);
+        // };
+        // xhttp.send({'apikey':'ab24b36c7788957', 'file':gh, 'language': 'eng'});
+        xhttp.open("POST", "http://localhost:3000/api/cardscan", true);
+        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        xhttp.onreadystatechange = function(){
+            document.getElementById('readerimage').src = xhttp.responseText;
+        };
+        xhttp.send(JSON.stringify({'data': gh}) );
         // Saving Picture
         // var a  = document.createElement('a');
         // a.href = gh;
@@ -32,8 +44,8 @@ function cardReaderOnLoad() {
       }
     }
 
-    canvas.width = 500;
-    canvas.height = 500;
+    canvas.width = 640;
+    canvas.height = 480;
 
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 
