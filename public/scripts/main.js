@@ -189,6 +189,39 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
         }
     };
 
+    $scope.deleteCardFromCollection = function(){
+
+        var type = document.getElementById('DcardType').value;
+        var amount = document.getElementById('DcardAmount').value;
+        if(CollectionService.getToken() != "noToken"){
+            console.log("DELETING");
+            var cardid = $scope.currentCard.id;
+            var cards = {};
+            var card = {};
+            card[type] = parseInt(amount);
+            cards[cardid] = card;
+
+            console.log(cards);
+            console.log(CollectionService.getToken());
+            $http({
+                method : "DELETE",
+                url : "http://localhost:3000/api/user/collection",
+                headers :
+                    {
+                        token : CollectionService.getToken(),
+                        cards : cards
+                    }
+                
+            }).then(function mySuccess(response) {
+                // Upon success, this function happens
+                document.getElementById('id03').style.display='none';
+            }, function myError(response) {
+                // Upon failure, this function happens
+
+            });
+        }
+    };
+
     $scope.isSignedIn = function(){
         return CollectionService.isSignedIn();
     };
@@ -196,6 +229,12 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
     $scope.openAddCardModal = function(){
         if($scope.isSignedIn()){
             document.getElementById('id03').style.display='block';
+        }
+    };
+
+    $scope.openDeleteCardModal = function(){
+        if($scope.isSignedIn()){
+            document.getElementById('id04').style.display='block';
         }
     };
 

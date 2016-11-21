@@ -114,8 +114,36 @@
 
 
 
+
+<div id="id04" class="modal">
+  <form class="modal-content animate" style="width:40%">
+    <div class="container">
+
+      <input type="text" placeholder="1" id="DcardAmount" style="width:100px; color:black; text-align:right;">
+      <select style="color: black" id="DcardType">
+          <option value="1stEdition">First Edition</option>
+          <option value="Additional">Additional</option>
+          <option value="Unlimited">Unlimited</option>
+          <option value="RevHolo">RevHolo</option>
+          <option value="Shadowless">Shadowless</option>
+      </select>
+      <br/>
+      <br/>
+    </div>
+    <div class="container" style="background-color:#f1f1f1; width:100%">
+        <button type="submit" ng-click="deleteCardFromCollection();">Add Card</button>
+        <button type="button" onclick="document.getElementById('id03').style.display='none'" class="cancelbtn" style="position:absolute; right: 5%">Cancel</button>
+    </div>
+  </form>
+</div>
+
+
+
 <div align="center" class="col-xs-12">
-	<button ng-click="openAddCardModal()" style="width: 60%; text-align:center;">Add Card to Collection</button>
+	<div>
+		<button ng-click="openAddCardModal()" style="width: 40%; text-align:center;">Add to Collection</button>
+		<button ng-click="openDeleteCardModal()" style="width: 19.5%; text-align:center;" id="deleteCardButton">Delete from Collection</button>
+	</div>
 	<button style="background-color: #aa0000; width: 60%" onClick="openTab(event,'Encyclopedia')"style="text-align: center;">
 		Return
 	</button>
