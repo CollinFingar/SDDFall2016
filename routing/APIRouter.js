@@ -243,6 +243,7 @@ router.route('/user/collection')
                     res.status(200).send('Request Completed');
                 });
             }
+            res.status(400).send("No cards to add provided.");
         });
     })
     .delete(function(req, res, next) {
@@ -256,11 +257,11 @@ router.route('/user/collection')
             }
 
             //Check if the user included any cards to delete. Silly Users
-            if ('cards' in req.body) {
+            if ('cards' in req.headers) {
                 //Get the user's card collection into memory (Map of card id's to Map of editions to counts)
                 var userCardsMap = result.cards;
                 //Get a reference to the cards to delete (Map of card id's to Map of editions to counts)
-                var deleteCards = req.body.cards;
+                var deleteCards = req.headers.cards;
                 var deleteCardsIDs = Object.keys(deleteCards);
 
                 var validEditions = ['1stEdition', 'Additional', 'Unlimited', 'RevHolo', 'Shadowless'];
@@ -306,6 +307,8 @@ router.route('/user/collection')
                     res.status(200).send('Request Completed');
                 });
             }
+
+            res.status(400).send("No cards to delete provided.");
         });
     });
 
