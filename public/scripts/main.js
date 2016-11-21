@@ -1,25 +1,31 @@
-// This is the main application.
 var emailTextVar = "Not logged in";
 var lastPage = "Encyclopedia";
 
+// This is the main application.
 var app = angular.module('theApp', []);
 
+// Collecetion Service relays the user's collection and token between both controllers
 app.service('CollectionService', function(){
     var collection = {};
     var token = "noToken";
     return {
+        // returns the collection
         getCollection: function(){
             return collection;
         },
+        // sets the collection
         setCollection: function(newCollection){
             collection = newCollection;
         },
+        // returns the token
         getToken: function(){
             return token;
         },
+        // sets the token
         setToken: function(newToken){
             token = newToken;
         },
+        // retuns a bool if the user is signed in
         isSignedIn: function(){
             if(token == "noToken"){
                 return false;
@@ -31,7 +37,7 @@ app.service('CollectionService', function(){
 });
 
 // This controller handles most of the card databasing
-app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', function($scope, $http, $interval, CollectionService) {
+app.controller('cardCtrl', ['$scope', '$http', '$interval', 'CollectionService', function($scope, $http, $interval, CollectionService) {
     // Names of each of the html tabs
     $scope.tabTitles = [
         "Encyclopedia",
@@ -45,6 +51,7 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
 
     $scope.addSearchResults = [];
 	$scope.searchResults = [];
+    // The users collection
     $scope.userCollection = {}
 
     // This gathers the entire encyclopedia of information upon initialization
@@ -55,6 +62,7 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
 		$scope.encyclopediaEntries = response.data;
 		$scope.loadSearchResults("encyclopedia");
     }, function myError(response) {
+        console.log("ERROR RETRIEVING DATABASE");
     });
     // This gathers the next grouping of cards to display
 	$scope.nextPage = function() {
@@ -120,52 +128,55 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
 			return true;
 		}
 	};
-
+    // This querys the server for cards containing specific key words
     $scope.searchKeyword = function(searchType){
 		var value;
+        // This searches through the entire encyclopedia
 		if (searchType == "encyclopedia") {
 			value = document.getElementById("searchBarEncyclopedia").value;
             value = value.replace(" ","+");
             $http({
                 method : "GET",
                 url : "http://localhost:3000/api/keysearch/" + value
+            // On success, the cards are displayed
             }).then(function mySuccess(response) {
                 $scope.pageNum = 0;
                 $scope.searchResults = response.data;
                 $scope.loadSearchResults("keyword");
             }, function myError(response) {
-
+                console.log("ERROR SEARCHING DATABASE");
             });
+        // This only searches the user's collection
 		} else if(searchType == "collection"){
             value = document.getElementById("searchBarCollection").value;
             value = value.replace(" ","+");
             $http({
                 method : "GET",
                 url : "http://localhost:3000/api/user/collection/keysearch/" + value,
-                headers :
-                    {
-                        "Token": CollectionService.getToken()
-                    }
+                headers : {"Token": CollectionService.getToken()}
+            // On success, the cards are displayed
             }).then(function mySuccess(response) {
                 $scope.pageNum = 0;
                 $scope.searchResults = response.data;
                 $scope.loadSearchResults("keyword");
             }, function myError(response) {
-
+                console.log("ERROR SEARCHING DATABASE");
             });
         }
 
     };
-
+    // This sets the user collection in this controller as the one in Collection Service
     $scope.retrieveCollection = function(){
         $scope.userCollection = CollectionService.getCollection();
         $scope.$apply;
     };
-
+    // This function adds a certain card to the user's collection
     $scope.addCardToCollection = function(){
         var type = document.getElementById('cardType').value;
         var amount = document.getElementById('cardAmount').value;
+        // If the token is a valid token (a user is logged in)
         if(CollectionService.getToken() != "noToken"){
+            // Crafts the data for the server post
             var cardid = $scope.currentCard.id;
             var cards = {};
             var card = {};
@@ -182,78 +193,61 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
                     }
                 )
             }).then(function mySuccess(response) {
-                // Upon success, this function happens
                 document.getElementById('id03').style.display='none';
             }, function myError(response) {
-                // Upon failure, this function happens
+                console.log("ERROR ADDING CARD TO COLLECTION");
 
             });
         }
     };
-
+    // This function deletes a given amount of cards from a user's collection
     $scope.deleteCardFromCollection = function(){
-
         var type = document.getElementById('DcardType').value;
         var amount = document.getElementById('DcardAmount').value;
+        // If the token is a valid token (a user is logged in)
         if(CollectionService.getToken() != "noToken"){
-            console.log("DELETING");
+            // Crafts the data for the server post
             var cardid = $scope.currentCard.id;
             var cards = {};
             var card = {};
             card[type] = parseInt(amount);
             cards[cardid] = card;
 
-            console.log(cards);
-            console.log(CollectionService.getToken());
             $http({
                 method : "DELETE",
                 url : "http://localhost:3000/api/user/collection",
-                data :
-                    {
-                        cards : cards
-                    },
-                headers :
-                    {
+                data : { cards : cards },
+                headers : {
                         "Token" : CollectionService.getToken(),
-                        "Content-Type": "application/json;charset=utf-8"
-                    }
-
+                        "Content-Type": "application/json;charset=utf-8" }
             }).then(function mySuccess(response) {
-                // Upon success, this function happens
-                console.log(response);
-                console.log("Success");
+                // Upon success, return to the user's collection
                 document.getElementById('id04').style.display='none';
                 openTab(event,'Collection');
             }, function myError(response) {
-                // Upon failure, this function happens
-                console.log(response);
-                console.log("Failure");
+                console.log("ERROR DELETING CARD FROM COLLECTION")
             });
         }
     };
-
+    // Checks to see if a user is logged in
     $scope.isSignedIn = function(){
         return CollectionService.isSignedIn();
     };
-
+    // Opens the modal which allows users to add cards
     $scope.openAddCardModal = function(){
         if($scope.isSignedIn()){
             document.getElementById('id03').style.display='block';
         }
     };
-
+    // Opens the modal which allows users to delete cards
     $scope.openDeleteCardModal = function(){
         if($scope.isSignedIn()){
             document.getElementById('id04').style.display='block';
         }
     };
-
+    // Retrieves the collection from the service every 2.5 seconds
     $interval(function() {
-        //if($scope.userCollection != CollectionService.getCollection()){
-            $scope.retrieveCollection();
-            console.log($scope.userCollection);
-        //} else {
-        //}
+        $scope.retrieveCollection();
     }, 2500);
 }]);
 
