@@ -311,7 +311,7 @@ router.route('/user/collection')
                                         delete userCardsMap[cardId][edition];
 
                                         //We also need to check if the user has no more cards of type cardId
-                                        var editionsRemaining = userCardsMap[cardId].length;
+                                        var editionsRemaining = Object.keys(userCardsMap[cardId]).length;
 
                                         if (editionsRemaining == 0) {
                                             delete userCardsMap[cardId];
