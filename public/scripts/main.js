@@ -1,5 +1,6 @@
 // This is the main application.
 var emailTextVar = "Not logged in";
+var lastPage = "Encyclopedia";
 
 var app = angular.module('theApp', []);
 
@@ -158,6 +159,7 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
 
     $scope.retrieveCollection = function(){
         $scope.userCollection = CollectionService.getCollection();
+        $scope.$apply;
     };
 
     $scope.addCardToCollection = function(){
@@ -247,11 +249,12 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
     };
 
     $interval(function() {
-        if($scope.userCollection != CollectionService.getCollection()){
+        //if($scope.userCollection != CollectionService.getCollection()){
             $scope.retrieveCollection();
-        } else {
-        }
-    }, 5000);
+            console.log($scope.userCollection);
+        //} else {
+        //}
+    }, 2500);
 }]);
 
 // This controller handles all of the account handling (signing in/registering)
@@ -367,10 +370,16 @@ function main(){
     document.getElementById("Encyclopedia").style.display = "block";
 }
 
+function returnToLastPage(evt){
+    openTab(evt, lastPage);
+
+}
+
 // Opens the page for a tab when it's clicked on.
 function openTab(evt, section) {
     // Declare all variables
     var i, tabcontent, tablinks;
+
 
     // Get all elements with class="tabcontent" and hide them
     tabcontent = document.getElementsByClassName("tabcontent");
@@ -387,5 +396,18 @@ function openTab(evt, section) {
     // Show the current tab, and add an "active" class to the link that opened the tab
 	document.getElementById(section).style.display = "block";
 	evt.currentTarget.className += " active";
+
+    if(section == 'Card'){
+        if(lastPage == "Encyclopedia"){
+            document.getElementById("deleteCardButton").style.display = "none";
+        } else if(lastPage == "Collection"){
+            document.getElementById("deleteCardButton").style.display = "initial";
+        }
+    }
+    if(section == "Encyclopedia"){
+        lastPage = section;
+    } else if(section == "Collection"){
+        lastPage = section;
+    }
 }
 main();

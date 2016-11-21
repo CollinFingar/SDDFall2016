@@ -10,7 +10,12 @@
 		<a ng-click="cardData(x)">
 			<img ng-src= "{{x.imageUrl}}" style="width:122px; height:178px; margin-top:12%">
 		</a>
-		<br>{{x.name | limitTo: 24}}{{x.name.length > 24 ? '...' : ''}}  <span style="color: #FF3333;">{{x.counts.edition}}</span>
+		<br>{{x.name | limitTo: 24}}{{x.name.length > 24 ? '...' : ''}}  </br>
+		<span style="color: cyan;">{{x.counts.edition + x.counts["1stEdition"]}} </span>
+		<span style="color: red;">{{x.counts.Additional}} </span>
+		<span style="color: yellow;">{{x.counts.Unlimited}} </span>
+		<span style="color: green;">{{x.counts.RevHolo}} </span>
+		<span style="color: white;">{{x.counts.Shadowless}} </span>
 	</div>
 </div>
 <div style="text-align:center;">
