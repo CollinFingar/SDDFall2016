@@ -211,13 +211,16 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
                         token : CollectionService.getToken(),
                         cards : cards
                     }
-                
+
             }).then(function mySuccess(response) {
                 // Upon success, this function happens
-                document.getElementById('id03').style.display='none';
+                console.log(response);
+                console.log("Success");
+                document.getElementById('id04').style.display='none';
             }, function myError(response) {
                 // Upon failure, this function happens
-
+                console.log(response);
+                console.log("Failure");
             });
         }
     };
