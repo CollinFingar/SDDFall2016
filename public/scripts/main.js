@@ -217,6 +217,7 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
                 console.log(response);
                 console.log("Success");
                 document.getElementById('id04').style.display='none';
+                openTab(event,'Collection');
             }, function myError(response) {
                 // Upon failure, this function happens
                 console.log(response);
