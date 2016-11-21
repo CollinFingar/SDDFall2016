@@ -1,7 +1,10 @@
+<!-- Collection Page. Similar functionality to encyclopedia.html, but with a few extra parts -->
+<!-- Page refreshing tool to allow user to update their collection if a change is made -->
 <input  type="image" src="../images/toolIcons/refresh.png"
 	style="width:25px; position: absolute; right:4%;"
 	onclick="openTab(event,'Collection');"
 	ng-click="loadSearchResults('collection');"></input>
+<!-- This span is a search bar where the user can input keywords to narrow database search results (uses fuzzy search) -->
 <span style="text-align: center">
 	Search by Keywords
 	<input id="searchBarCollection" type="text" style="color:black; width:50%">
@@ -10,6 +13,7 @@
 
 	</input>
 </span>
+<!-- Edition of card -->
 <div align="center">
 	<span style="color: cyan;">1st Edition </span>---
 	<span style="color: red;">Additonal </span>---
@@ -17,6 +21,7 @@
 	<span style="color: green;">Rev. Holo </span>---
 	<span style="color: white;">Shadowless </span>
 </div>
+<!-- Card displaying, with the added number the user has in their collection of each card. (Edition denoted by color) -->
 <div style="text-align:center">
 	<div class="col-md-3 col-sm-4 col-xs-6" ng-repeat="x in cardPage">
 		<a ng-click="cardData(x)">
@@ -30,6 +35,7 @@
 		<span style="color: white;">{{x.counts.Shadowless}} </span>
 	</div>
 </div>
+<!-- Next and Previous page buttons to move to next slice of cards in the database -->
 <div align="center" class="col-xs-12" >
 	<button ng-click="previousPage()" style="width:20%;">
 		Previous Page

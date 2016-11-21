@@ -3,8 +3,11 @@
 		<div align="center" class="col-md-8 col-sm-6">
 			<img ng-src= "{{currentCard.imageUrl}}" style="width:244px; height:364px;">
 		</div>
+		<!-- The following is the formatting and retrieving of all neccesary card data that is displayed to the right of a card
+			checkField(object) checks to see if a given object is not null, if so the field is not displayed -->
 		<div align="center" class="col-md-3 col-sm-6">
 			<table style="background-color: #aa0000" border="2">
+				<!-- Title of field is given after first <td> in every <tr> -->
 				<tr ng-show="checkField(currentCard.name)">
 					<td border="2">Name</td> <td>{{currentCard.name}}</td>
 				</tr>
@@ -32,18 +35,13 @@
 						<div ng-show="checkField(currentCard.ability.text)">{{currentCard.ability.text}}</div>
 					</td>
 				</tr>
+				<!-- Certain fields like the one below use ng-repeat to display multiple intedeces in a given field -->
 				<tr ng-show="checkField(currentCard.attacks)">
 					<td>Attack(s)</td>
 					<td>
 						<div ng-repeat="x in currentCard.attacks">
 							<div ng-show="checkField(x.name)"><b>{{x.name}}</b></div>
 							<span ng-repeat="cost in x.cost track by $index" ng-show="checkField(x.cost)"> {{cost}} </span>
-							<!--
-								<div ng-repeat="c in x.cost">
-									{{c}}
-								</div>
-							</div>
-							-->
 							<div ng-show="checkField(x.damage)">{{x.damage}}</div>
 							<div ng-show="checkField(x.text)">{{x.text}}</div>
 						</div>
@@ -88,7 +86,7 @@
 <div id="id03" class="modal">
   <form class="modal-content animate" style="width:40%">
     <div class="container">
-
+	<!-- Display the type of the card the user has registered. (Only relevant in a user's collection -->
       <input type="text" placeholder="1" id="cardAmount" style="width:100px; color:black; text-align:right;">
       <select style="color: black" id="cardType">
           <option value="1stEdition">First Edition</option>
@@ -100,6 +98,7 @@
       <br/>
       <br/>
     </div>
+	<!-- Buttons to add a card to the user's collection -->
     <div class="container" style="background-color:#f1f1f1; width:100%">
         <button type="submit" ng-click="addCardToCollection();">Add Card(s)</button>
         <button type="button" onclick="document.getElementById('id03').style.display='none'" class="cancelbtn" style="position:absolute; right: 5%">Cancel</button>
@@ -125,6 +124,7 @@
       <br/>
       <br/>
     </div>
+	<!-- Remove card from a user's collection. (Only visible when viewing from collection -->
     <div class="container" style="background-color:#f1f1f1; width:100%">
         <button type="submit" ng-click="deleteCardFromCollection();">Remove Card(s)</button>
         <button type="button" onclick="document.getElementById('id04').style.display='none'" class="cancelbtn" style="position:absolute; right: 5%">Cancel</button>
@@ -133,7 +133,7 @@
 </div>
 
 
-
+<!-- Collection buttons, including a return to previous page button -->
 <div align="center" class="col-xs-12">
 	<div>
 		<button ng-click="openAddCardModal()" style="width: 29.75%; text-align:center;">Add to Collection</button>
