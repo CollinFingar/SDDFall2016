@@ -1,0 +1,22 @@
+
+> sddfall2016@1.0.0 test /home/statue/Documents/rpi_work/computer_science/sdd/SDDFall2016
+> mocha --reporter spec
+
+
+
+  credentialVerifyer
+    #verify
+      ✓ should return true when the username is a real email and the password is also correct
+      ✓ should return false when the username is not an email, but the password is correct
+      ✓ should return false when the username is correct, but the password is incorrect
+      ✓ should return false when both of the credentials are wrong
+
+  MongoManager
+    #connect()
+      ✓ should get a Mongo connection
+      ✓ should properly cache the db connection
+      ✓ should be able to close the connection without error
+
+
+  7 passing (41ms)
+

@@ -6,7 +6,7 @@ var assert = require('assert');
 
 describe('credentialVerifyer', function() {
     var verifyer = require('../lib/credentialVerifyer.js');
-    describe.only('#verify', function() {
+    describe('#verify', function() {
         it('should return true when the username is a real email and the password is also correct', function() {
             var correctCredentials = {
                 username:'thisisgoodemail@email.com',
@@ -39,7 +39,7 @@ describe('credentialVerifyer', function() {
 });
 
 describe('MongoManager', function() {
-    var manager = require('../credentialVerifyer.js');
+    var manager = require('../mongo/mongoManager.js');
     describe('#connect()', function(done) {
         it('should get a Mongo connection', function() {
             manager.connect('mongodb://localhost:27017/card', function(err) {
@@ -52,9 +52,11 @@ describe('MongoManager', function() {
             done();
         });
         it('should be able to close the connection without error', function(done) {
-            assert.notEqual(manager.close(), false);
-            assert.equal(manager.get, null);
-            done();
+            manager.close(function(result) {
+                assert.equal(result, true);
+                assert.equal(manager.get(), null);
+                done();
+            });
         });
     });
 });
