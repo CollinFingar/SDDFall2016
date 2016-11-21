@@ -206,10 +206,14 @@ app.controller('theCtrl', ['$scope', '$http', '$interval', 'CollectionService', 
             $http({
                 method : "DELETE",
                 url : "http://localhost:3000/api/user/collection",
+                data :
+                    {
+                        cards : cards
+                    },
                 headers :
                     {
-                        token : CollectionService.getToken(),
-                        cards : cards
+                        "Token" : CollectionService.getToken(),
+                        "Content-Type": "application/json;charset=utf-8"
                     }
 
             }).then(function mySuccess(response) {

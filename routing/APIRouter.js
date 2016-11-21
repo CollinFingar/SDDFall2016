@@ -23,8 +23,8 @@ router.use(function(req, res, next) {
     console.log('Request URL:' + req.url); //The url given without query params or /api
     console.log('Request path:' + req.path); //The url with query params but no /api
     console.log('Request Method:' + req.method); //The verb used in the request e.g. GET, PUT, POST, DELETE
-    console.log('Request Query:' + JSON.stringify(req.query) + '\n'); //The JSON of the parsed query params
-    console.log('Request Body:' + JSON.stringify(req.body) + '\n');
+    console.log('Request Query:' + JSON.stringify(req.query)); //The JSON of the parsed query params
+    console.log('Request Body:' + JSON.stringify(req.body) + '\n'); //The body of the request
     next();
 });
 
@@ -216,20 +216,26 @@ router.route('/user/collection')
                         edition = validEditions[j];
                         //Check if we need to add this edition
                         if (edition in newCards[cardId]) {
-                            //Check if the card is in the user's collection
-                            if (cardId in userCardsMap) {
-                                //check if the edition is in the map for the user's cardID
-                                if (edition in userCardsMap[cardId]) {
-                                    userCardsMap[cardId][edition] += newCards[cardId][edition];
+                            //Check if the count in the new cards map is actually a number
+                            var newCardCount = newCards[cardId][edition];
+                            if (newCardCount != null && (!isNaN(newCardCount))) {
+                                //Check if the card is in the user's collection
+                                if (cardId in userCardsMap) {
+                                    //check if the edition is in the map for the user's cardID
+                                    if (edition in userCardsMap[cardId]) {
+                                        userCardsMap[cardId][edition] += newCardCount;
+                                    }
+                                    //else just add the edition to the card
+                                    else {
+                                        userCardsMap[cardId][edition] = newCardCount;
+                                    }
                                 }
-                                //else just add the edition to the card
+                                //else add the card to the user collection with only the current edition
                                 else {
-                                    userCardsMap[cardId][edition] = newCards[cardId][edition];
+                                    var newCardEditions = {};
+                                    newCardEditions[edition] = newCardCount;
+                                    userCardsMap[cardId] = newCardEditions;
                                 }
-                            }
-                            //else add the card to the user collection with only the current edition
-                            else {
-                                userCardsMap[cardId] = { edition: newCards[cardId][edition] };
                             }
                         }
                     }
@@ -243,7 +249,9 @@ router.route('/user/collection')
                     res.status(200).send('Request Completed');
                 });
             }
-            res.status(400).send("No cards to add provided.");
+            else {
+                res.status(400).send("No cards to add provided.");
+            }
         });
     })
     .delete(function(req, res, next) {
@@ -257,47 +265,68 @@ router.route('/user/collection')
             }
 
             //Check if the user included any cards to delete. Silly Users
-            if ('cards' in req.headers) {
+            if ('cards' in req.body && typeof req.body == 'object') {
                 //Get the user's card collection into memory (Map of card id's to Map of editions to counts)
                 var userCardsMap = result.cards;
                 //Get a reference to the cards to delete (Map of card id's to Map of editions to counts)
-                var deleteCards = req.headers.cards;
+                var deleteCards = req.body.cards;
                 var deleteCardsIDs = Object.keys(deleteCards);
 
                 var validEditions = ['1stEdition', 'Additional', 'Unlimited', 'RevHolo', 'Shadowless'];
                 var cardId = "";
                 var edition = "";
-                for (var i = 0; i < deleteCards.length; i++) {
+
+                console.log('deletecards map = ');
+                console.log(userCardsMap);
+                console.log();
+
+                console.log('user cards map = ');
+                console.log(userCardsMap);
+                console.log();
+
+                for (var i = 0; i < deleteCardsIDs.length; i++) {
                     cardId = deleteCardsIDs[i];
                     for (var j = 0; j < validEditions.length; j++) {
                         edition = validEditions[j];
                         //Check if we need to delete this edition
                         if (edition in deleteCards[cardId]) {
-                            //Check that the user has that edition and card in their collection
-                            if (cardId in userCardsMap && edition in userCardsMap[cardId]) {
-                                var currentEditionCount = userCardsMap[cardId][edition];
-                                var deleteAmount = deleteCards[cardId][edition];
+                            //Check if the count in the new cards map is actually a number
+                            var deleteAmount = deleteCards[cardId][edition];
+                            console.log("delete amount = " + deleteAmount);
+                            if (deleteAmount != null && (!isNaN(deleteAmount))) {
+                                //Check that the user has that edition and card in their collection
+                                console.log("The delete amount is valid");
+                                if (cardId in userCardsMap && edition in userCardsMap[cardId]) {
+                                    var currentEditionCount = userCardsMap[cardId][edition];
 
-                                var newEditionCount = currentEditionCount - deleteAmount;
+                                    var newEditionCount = currentEditionCount - deleteAmount;
 
-                                //Need to update the new edition count, or remove the edition from the map accordingly
-                                if (newEditionCount >= 0) {
-                                    userCardsMap[cardId][edition] = newEditionCount;
-                                }
-                                else {
-                                    delete userCardsMap[cardId][edition];
+                                    console.log('The card should be updated');
 
-                                    //We also need to check if the user has no more cards of type cardId
-                                    var editionsRemaining = userCardsMap[cardId].length;
+                                    //Need to update the new edition count, or remove the edition from the map accordingly
+                                    if (newEditionCount > 0) {
+                                        userCardsMap[cardId][edition] = newEditionCount;
+                                    }
+                                    else {
+                                        delete userCardsMap[cardId][edition];
 
-                                    if (editionsRemaining == 0) {
-                                        delete userCardsMap[cardId];
+                                        //We also need to check if the user has no more cards of type cardId
+                                        var editionsRemaining = userCardsMap[cardId].length;
+
+                                        if (editionsRemaining == 0) {
+                                            delete userCardsMap[cardId];
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+
+
+                console.log('user cards map now = ');
+                console.log(userCardsMap);
+                console.log();
 
                 //Push the new changes back up into mongo
                 users.update({'username':req.decoded.username}, {$set: {'cards':userCardsMap}}, function(err, result) {
@@ -307,8 +336,9 @@ router.route('/user/collection')
                     res.status(200).send('Request Completed');
                 });
             }
-
-            res.status(400).send("No cards to delete provided.");
+            else {
+                res.status(400).send("No cards to delete provided.");
+            }
         });
     });
 
