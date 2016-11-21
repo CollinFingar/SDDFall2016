@@ -360,7 +360,7 @@ app.controller('loginCtrl', ['$scope', '$http', '$interval', 'CollectionService'
             $scope.accessCollection();
         } else {
         }
-    }, 5000 );
+    }, 3000 );
 
 }]);
 
